@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SproomInbox.API", "SproomInbox.API\SproomInbox.API.csproj", "{A980C29E-D995-41E8-A676-8FA98E0EBCE3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApp", "WebApp", "{3A6A5920-A020-42E6-84ED-067F3261AA0C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SproomInbox.Domain", "SproomInbox.Domain\SproomInbox.Domain.csproj", "{DEF49696-7D0E-48B3-BB37-0A813160454E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SproomInbox.Infra", "SproomInbox.Infra\SproomInbox.Infra.csproj", "{1077C75A-A61F-49CC-96E6-39A212F0133F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SproomInbox.Web", "SproomInbox.Web\SproomInbox.Web.csproj", "{CBC00AA8-8BF0-4217-8061-C9396BD02F30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SproomInbox.EmailQueueReceiver", "SproomInbox.EmailQueueReceiver\SproomInbox.EmailQueueReceiver.csproj", "{988D2317-837B-4EB3-882D-98BFC0FC9530}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SproomInbox.Tests", "SproomInbox.Tests\SproomInbox.Tests.csproj", "{8C412B4F-D7F4-4312-BEF4-36B5F5300550}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A980C29E-D995-41E8-A676-8FA98E0EBCE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A980C29E-D995-41E8-A676-8FA98E0EBCE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A980C29E-D995-41E8-A676-8FA98E0EBCE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A980C29E-D995-41E8-A676-8FA98E0EBCE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEF49696-7D0E-48B3-BB37-0A813160454E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF49696-7D0E-48B3-BB37-0A813160454E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEF49696-7D0E-48B3-BB37-0A813160454E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEF49696-7D0E-48B3-BB37-0A813160454E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1077C75A-A61F-49CC-96E6-39A212F0133F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1077C75A-A61F-49CC-96E6-39A212F0133F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1077C75A-A61F-49CC-96E6-39A212F0133F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1077C75A-A61F-49CC-96E6-39A212F0133F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBC00AA8-8BF0-4217-8061-C9396BD02F30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBC00AA8-8BF0-4217-8061-C9396BD02F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBC00AA8-8BF0-4217-8061-C9396BD02F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBC00AA8-8BF0-4217-8061-C9396BD02F30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{988D2317-837B-4EB3-882D-98BFC0FC9530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{988D2317-837B-4EB3-882D-98BFC0FC9530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{988D2317-837B-4EB3-882D-98BFC0FC9530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{988D2317-837B-4EB3-882D-98BFC0FC9530}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C412B4F-D7F4-4312-BEF4-36B5F5300550}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C412B4F-D7F4-4312-BEF4-36B5F5300550}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C412B4F-D7F4-4312-BEF4-36B5F5300550}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C412B4F-D7F4-4312-BEF4-36B5F5300550}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CBC00AA8-8BF0-4217-8061-C9396BD02F30} = {3A6A5920-A020-42E6-84ED-067F3261AA0C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DE2D8065-E4CE-4D42-9B7F-3CD168D33A92}
+	EndGlobalSection
+EndGlobal
