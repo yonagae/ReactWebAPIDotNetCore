@@ -37,23 +37,16 @@ namespace SproomInbox.API
         [HttpGet]
         public Task<List<DocumentDTO>> GetDocuments()
         {
-
-            //var l = _documentRepo.GetAll().ToList();
-
-            //_documentStateRepo.Add(new DocumentState(Guid.NewGuid(), DateTime.Now, Domain.Enum.eState.Approved, l.First()));
-            //_documentStateRepo.Add(new DocumentState(Guid.NewGuid(), DateTime.Now.AddDays(-1), Domain.Enum.eState.Received, l.First()));
-            //_documentStateRepo.Add(new DocumentState(Guid.NewGuid(), DateTime.Now.AddDays(2), Domain.Enum.eState.Approved, l.First()));
-            //_documentRepo.SaveChanges();
-
             return Task.FromResult(
                 _converter.Parse(_documentRepo.GetAll().ToList())
                 );
         }
 
         /// <summary>
-        /// Get a list of documents
+        /// Reject Document and create a new Document State to record the changes
         /// </summary>
-        /// <returns>A list of documents</returns>
+        /// <param name="id">id of the document</param>
+        /// <returns>the rejected document</returns>
         [HttpPut]
         [Route("Reject/{id:Guid}")]
         public async Task<DocumentDTO> RejectDocument(Guid id)
@@ -63,10 +56,10 @@ namespace SproomInbox.API
         }
 
         /// <summary>
-        /// 
+        /// Approve Document and create a new Document State to record the changes
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">id of the document</param>
+        /// <returns>the approved document</returns>
         [HttpPut]
         [Route("Approve/{id:Guid}")]
         public async Task<DocumentDTO> ApproveDocument(Guid id)

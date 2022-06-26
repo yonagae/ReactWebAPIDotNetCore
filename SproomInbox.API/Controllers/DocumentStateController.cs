@@ -20,16 +20,17 @@ namespace SproomInbox.API
             _documentRepo = documentRepo;
             _converter = new DocumentStateConverter();
         }
-
-        /// <summary>
-        /// Get a list of documents
-        /// </summary>
-        /// <returns>A list of documents</returns>
+       
+       /// <summary>
+       /// get the document states (change history) of a document
+       /// </summary>
+       /// <param name="id">the id of the document</param>
+       /// <returns>list of document states</returns>
         [HttpGet]
         [Route("Index/{id:Guid}")]
-        public Task<List<DocumentStateDTO>> GetDocumentStatesByDocumentId(Guid id)
+        public async Task<List<DocumentStateDTO>> GetDocumentStatesByDocumentId(Guid id)
         {
-            return Task.FromResult(
+            return await Task.FromResult(
                 _converter.Parse(_documentRepo.GetDocumentStatesByDocumentId(id))
                 );
         }
