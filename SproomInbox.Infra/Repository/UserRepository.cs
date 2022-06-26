@@ -12,7 +12,7 @@ namespace SproomInbox.Infra.Repository
 {
     public class UserRepository : Repository<User, Guid>, IUserRepository
     {
-        public UserRepository(DbContext context)
+        public UserRepository(ApplicationDbContext context)
            : base(context)
         {
         }

@@ -24,7 +24,7 @@ builder.Services.AddSwaggerGen(options => {
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("ConexaoBD")));
 
-builder.Services.AddScoped<ApplicationDbContext>();
+builder.Services.AddScoped<DbContext, ApplicationDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IDocumentStateRepository, DocumentStateRepository>();

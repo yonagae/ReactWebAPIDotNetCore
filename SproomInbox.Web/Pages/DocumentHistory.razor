@@ -1,0 +1,54 @@
+﻿@page "/DocumentHistory"
+@using SproomInbox.Data.DTO
+@inject HttpClient Http
+@inject NavigationManager NavManager
+@using Microsoft.AspNetCore.WebUtilities
+
+<PageTitle>Sproom Inbox</PageTitle>
+
+<h1>Sproom Inbox</h1>
+
+@if (documents != null)
+{
+    <p>History</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>State</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var document in documents)
+            {
+                <tr>
+                    <td>@document.Id</td>
+                    <td>@document.TimeStamp</td>
+                    <td>@document.State</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
+
+@code {
+    private IList<DocumentStateDTO>? documents;
+
+    protected override async Task OnInitializedAsync()
+    {
+        string _id = "";
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        var queryStrings = QueryHelpers.ParseQuery(uri.Query);
+        if(queryStrings.TryGetValue("id", out var name))
+        {
+            _id = name;
+        }
+
+        documents = await Http.GetFromJsonAsync<IList<DocumentStateDTO>>("/DocumentState/Index/" + _id);
+    }
+}
