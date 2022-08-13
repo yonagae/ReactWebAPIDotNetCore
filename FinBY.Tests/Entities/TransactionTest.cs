@@ -31,15 +31,15 @@ namespace FinBY.Tests.Entities
             transaction.TotalAmount.Should().Be(0);
             transaction.TransactionAmounts.Count.Should().Be(0);
 
-            transaction.AddTransactionAmount(new TransactionAmount(1, new User("Test"), 10.02m)).Should().BeTrue();
+            transaction.AddTransactionAmount(new TransactionAmount(1, 11, 10.02m)).Should().BeTrue();
             transaction.TotalAmount.Should().Be(10.02m);
             transaction.TransactionAmounts.Count.Should().Be(1);
 
-            transaction.AddTransactionAmount(new TransactionAmount(2, new User("Test"), 100.08m)).Should().BeTrue();
+            transaction.AddTransactionAmount(new TransactionAmount(2, 11, 100.08m)).Should().BeTrue();
             transaction.TotalAmount.Should().Be(110.10m);
             transaction.TransactionAmounts.Count.Should().Be(2);
 
-            transaction.AddTransactionAmount(new TransactionAmount(3, new User("Test"), 11)).Should().BeTrue();
+            transaction.AddTransactionAmount(new TransactionAmount(3, 11, 11)).Should().BeTrue();
             transaction.TotalAmount.Should().Be(121.10m);
             transaction.TransactionAmounts.Count.Should().Be(3);
         }
@@ -51,15 +51,15 @@ namespace FinBY.Tests.Entities
             transaction.TotalAmount.Should().Be(0);
             transaction.TransactionAmounts.Count.Should().Be(0);
 
-            transaction.AddTransactionAmount(new TransactionAmount(1, new User("Test"), -10.02m)).Should().BeTrue();
+            transaction.AddTransactionAmount(new TransactionAmount(1, 11, -10.02m)).Should().BeTrue();
             transaction.TotalAmount.Should().Be(-10.02m);
             transaction.TransactionAmounts.Count.Should().Be(1);
 
-            transaction.AddTransactionAmount(new TransactionAmount(2, new User("Test"), -100.08m)).Should().BeTrue();
+            transaction.AddTransactionAmount(new TransactionAmount(2, 11, -100.08m)).Should().BeTrue();
             transaction.TotalAmount.Should().Be(-110.10m);
             transaction.TransactionAmounts.Count.Should().Be(2);
 
-            transaction.AddTransactionAmount(new TransactionAmount(3, new User("Test"), -11)).Should().BeTrue();
+            transaction.AddTransactionAmount(new TransactionAmount(3, 11, -11)).Should().BeTrue();
             transaction.TotalAmount.Should().Be(-121.10m);
             transaction.TransactionAmounts.Count.Should().Be(3);
         }

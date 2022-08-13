@@ -26,9 +26,9 @@ namespace FinBY.Domain.Handler
             var result = await _transactionTypeRepository.UpdateAsync(request.TransactionType);
 
             //if the data doesn't exist in the db
-            if (result != null) return new GenericChangeCommandResult(false, "", result, true);
+            if (result != null) return new GenericChangeCommandResult(false, null, result, true);
 
-            return new GenericChangeCommandResult(true, "", result);
+            return new GenericChangeCommandResult(true, null, result);
         }
 
     }

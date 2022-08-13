@@ -15,16 +15,17 @@ namespace FinBY.Tests.Queries
     {
         private IList<TransactionAmount> _transactions;
 
-        public TransactionAmountQueriesTest()
+        [TestInitialize]
+        public void Setup()
         {
             _transactions = new List<TransactionAmount>();
-            _transactions.Add(new TransactionAmount(1, new User("Test"), 10.02m));
-            _transactions.Add(new TransactionAmount(1, new User("Test"), 11.02m));
-            _transactions.Add(new TransactionAmount(2, new User("Test1"), 12.02m));
-            _transactions.Add(new TransactionAmount(3, new User("Test1"), 13.02m));
-            _transactions.Add(new TransactionAmount(4, new User("Test"), 14.02m));
-            _transactions.Add(new TransactionAmount(4, new User("Test"), 15.02m));
-            _transactions.Add(new TransactionAmount(4, new User("Test"), 11.02m));
+            _transactions.Add(new TransactionAmount(1, 1, 10.02m));
+            _transactions.Add(new TransactionAmount(1, 2, 11.02m));
+            _transactions.Add(new TransactionAmount(2, 3, 12.02m));
+            _transactions.Add(new TransactionAmount(3, 4, 13.02m));
+            _transactions.Add(new TransactionAmount(4, 5, 14.02m));
+            _transactions.Add(new TransactionAmount(4, 6, 15.02m));
+            _transactions.Add(new TransactionAmount(4, 7, 11.02m));
         }
 
         [TestMethod]

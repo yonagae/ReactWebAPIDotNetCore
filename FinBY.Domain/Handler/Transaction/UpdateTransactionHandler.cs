@@ -1,4 +1,5 @@
 ﻿using FinBY.Domain.Commands;
+using FinBY.Domain.Data;
 using FinBY.Domain.Entities;
 using FinBY.Domain.Repositories;
 using MediatR;
@@ -23,12 +24,21 @@ namespace FinBY.Domain.Handler
 
         public async Task<GenericChangeCommandResult> Handle(UpdateTransactionCommand request, CancellationToken cancellationToken)
         {
-            var result = await _transactionRepository.UpdateAsync(request.Transaction);
+            var validationResult = request.Transaction.Validate();
 
-            //if the data doesn't exist in the db
-            if (result != null) return new GenericChangeCommandResult(false, "", result, true);
+            if (validationResult.isValid)
+            {
+                var result = await _transactionRepository.UpdateAsync(request.Transaction);
 
-            return new GenericChangeCommandResult(true, "", result);
+                //if the data doesn't exist in the db
+                if (result == null) return new GenericChangeCommandResult(false, new List<string>() { "Transaction not found" }, result, true);
+
+                return new GenericChangeCommandResult(true, null, result);
+            }
+            else
+            {
+                return new GenericChangeCommandResult(false, validationResult.errorMessages, null);
+            }
         }
 
     }

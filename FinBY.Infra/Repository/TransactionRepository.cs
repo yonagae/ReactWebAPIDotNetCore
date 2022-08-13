@@ -17,7 +17,7 @@ namespace FinBY.Infra.Repository
 
         public Task<List<Transaction>> GetAllWithDetailsAsList()
         {
-            return _dataset.AsNoTracking().Include("TransactionType").Include("TransactionAmounts.User").ToListAsync();
+            return _dataset.AsNoTracking().Include("TransactionType").Include("TransactionAmounts").ToListAsync();
         }
     }
 }

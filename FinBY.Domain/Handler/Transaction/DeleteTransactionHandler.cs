@@ -25,9 +25,9 @@ namespace FinBY.Domain.Handler
         {
             var result = await _transactionRepository.DeleteAsync(request.TransactionId);
 
-            if (!result) return new GenericChangeCommandResult(false, "Data not found", result, true);
+            if (!result) return new GenericChangeCommandResult(false, new List<string>() { "Data not found" }, result, true);
 
-            return new GenericChangeCommandResult(true, "", result);
+            return new GenericChangeCommandResult(true, null, result);
         }
 
     }

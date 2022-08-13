@@ -13,6 +13,7 @@ namespace FinBY.Domain.Data.DTO
         public TransactionTypeDTO TransactionType { get; set; }
         public string Description { get; set; }
         public string ShortDescription { get; set; }
+        public int UserId { get; set; }
         public ICollection<TransactionAmountDTO> TransactionAmounts { get; set; }
 
         [Range(0, 999999.99)]

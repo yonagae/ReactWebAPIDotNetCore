@@ -26,7 +26,7 @@ namespace FinBY.Domain.Handler
             //TransactionTypeConverter conv = new TransactionTypeConverter();
             //var result = await _transactionTypeRepository.InsertAsync(conv.Parse(request.TransactionType));
 
-            return new GenericChangeCommandResult(true, "", null);
+            return new GenericChangeCommandResult(true, null, null);
         }
 
     }

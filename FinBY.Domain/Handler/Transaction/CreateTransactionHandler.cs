@@ -1,13 +1,9 @@
 ﻿using FinBY.Domain.Commands;
-using FinBY.Domain.Entities;
 using FinBY.Domain.Repositories;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FinBY.Domain.Data;
 
 namespace FinBY.Domain.Handler
 {
@@ -23,9 +19,17 @@ namespace FinBY.Domain.Handler
 
         public async Task<GenericChangeCommandResult> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
         {
-            //var result = await _transactionRepository.InsertAsync(request.Transaction);
-            return null;// new GenericChangeCommandResult(true, "", result);
-        }
+            var validationResult = request.Transaction.Validate();
 
+            if (validationResult.isValid)
+            {
+                var result = await _transactionRepository.InsertAsync(request.Transaction);
+                return new GenericChangeCommandResult(true, null, result);
+            }
+            else
+            {
+                return new GenericChangeCommandResult(false, validationResult.errorMessages, null);
+            }
+        }
     }
 }

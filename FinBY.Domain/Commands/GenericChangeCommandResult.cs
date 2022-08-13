@@ -9,17 +9,17 @@ namespace FinBY.Domain.Commands
 {
     public class GenericChangeCommandResult :  ICommandResult
     {
-        public GenericChangeCommandResult(bool success, string message, object data, bool dataNotFound = false)
+        public GenericChangeCommandResult(bool success, List<string> messages, object data, bool dataNotFound = false)
         {
             Success = success;
-            Message = message;
+            Messages = messages;
             Data = data;
             DataNotFound = dataNotFound;
         }
 
         public bool Success { get; set; }
         public bool DataNotFound { get; set; }
-        public string Message { get; set; }
+        public List<string> Messages { get; set; }
         public object Data { get; set; }
     }
 }
