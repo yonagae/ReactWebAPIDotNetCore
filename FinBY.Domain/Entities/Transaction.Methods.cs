@@ -18,5 +18,17 @@ namespace FinBY.Domain.Entities
 
             return true;
         }
+
+        public bool RemoveTransactionAmount(TransactionAmount transactionAmount)
+        {
+            if (transactionAmount == null) return false;
+            if (transactionAmount.TransactionId != this.Id) return false;
+            if (TotalAmount < transactionAmount.Amount) return false;
+
+            _transactionAmounts.Remove(transactionAmount);
+            TotalAmount -= transactionAmount.Amount;
+
+            return true;
+        }
     }
 }

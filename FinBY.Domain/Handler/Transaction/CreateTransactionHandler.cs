@@ -23,7 +23,7 @@ namespace FinBY.Domain.Handler
 
             if (validationResult.isValid)
             {
-                var result = await _transactionRepository.InsertAsync(request.Transaction);
+                var result = await _transactionRepository.AddAsync(request.Transaction);
                 return new GenericChangeCommandResult(true, null, result);
             }
             else

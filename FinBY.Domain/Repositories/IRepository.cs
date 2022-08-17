@@ -17,13 +17,12 @@ namespace FinBY.Domain.Repositories
         void Remove(TKey id);
         int SaveChanges();
 
-        Task<TEntity> InsertAsync(TEntity item);
+        Task<TEntity> AddAsync(TEntity item);
         Task<TEntity> UpdateAsync(TEntity item);
         Task<bool> DeleteAsync(TKey id);
-        Task<TEntity> SelectByIdAsync(TKey id);
-        Task<IEnumerable<TEntity>> SelectAsync();
-        Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> expression);
-
+        Task<TEntity> GetByIdAsync(TKey id);
+        Task<IEnumerable<TEntity>> GetAlltAsync();
+        Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> expression);
         PagedResult<TEntity> GetPaged(int page,  int pageSize);
     }
 }

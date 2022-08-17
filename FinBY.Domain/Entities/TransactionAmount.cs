@@ -16,6 +16,8 @@ namespace FinBY.Domain.Entities
         [Required(ErrorMessage = "User must be specified")]
         public int UserId { get; private set; }
 
+        public User User { get; private set; }
+
         public TransactionAmount(int transactionId, int userId, decimal amount)
         {
             Amount = amount;

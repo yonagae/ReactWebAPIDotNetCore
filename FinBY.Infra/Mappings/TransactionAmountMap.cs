@@ -20,9 +20,14 @@ namespace FinBY.Infra.Mappings
             .HasColumnType("numeric(18, 2)")
             .IsRequired();
 
-            builder.Property(c => c.UserId)
-           .HasColumnName("UserId")
-           .IsRequired();
+           // builder.Property(c => c.UserId)
+           //.HasColumnName("UserId")
+           //.IsRequired();
+
+            builder.HasOne(x => x.User)
+              .WithMany()
+              .HasForeignKey(p => p.UserId)
+              .IsRequired();
 
             //builder.HasOne(x => x.Transaction)
             //    .WithMany(c => c.TransactionAmounts)

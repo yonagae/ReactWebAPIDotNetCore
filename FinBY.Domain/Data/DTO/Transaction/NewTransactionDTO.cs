@@ -9,14 +9,15 @@ namespace FinBY.Domain.Data.DTO
 {
     public class NewTransactionDTO
     {        
-        public DateTime TimeStamp { get; set; }
-        public TransactionTypeDTO TransactionType { get; set; }
+        public int TransactionTypeId { get; set; }
         public string Description { get; set; }
         public string ShortDescription { get; set; }
         public int UserId { get; set; }
-        public ICollection<TransactionAmountDTO> TransactionAmounts { get; set; }
+        public ICollection<NewTransactionAmountDTO> TransactionAmounts { get; set; }
 
         [Range(0, 999999.99)]
         public Decimal TotalAmount { get; set; }
+
+        public DateTime Date;
     }
 }

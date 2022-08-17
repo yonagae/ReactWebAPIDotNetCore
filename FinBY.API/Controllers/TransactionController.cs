@@ -25,14 +25,13 @@ namespace FinBY.API.Controllers
             IMapper mapper,
             IMediator mediator,
             ILoggerManager logger,
-            ITransactionRepository transactionRepository,
-            ITransactionAmountRepository transactionAmountRepository)
+            IRepositoryWrapper repositoryWrapper)
         {
             _mapper = mapper;
             _mediator = mediator;
             _logger = logger;
-            _transactionRepository = transactionRepository;
-            _transactionAmountRepository = transactionAmountRepository;
+            _transactionRepository = repositoryWrapper.TransactionRepository;
+            _transactionAmountRepository = repositoryWrapper.TransactionAmountRepository;
         }
 
         [HttpGet]

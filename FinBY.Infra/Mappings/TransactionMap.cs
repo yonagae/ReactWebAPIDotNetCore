@@ -30,12 +30,23 @@ namespace FinBY.Infra.Mappings
                .HasColumnName("TimeStamp")
                .IsRequired();
 
+            builder.Property(c => c.Date)
+            .HasColumnType("datetime")
+            .HasColumnName("Date")
+            .IsRequired();
+
             builder.Property(c => c.TotalAmount)
            .HasColumnName("TotalAmount")
            .HasColumnType("numeric(18, 2)")
            .IsRequired();
 
-            builder.HasOne(x => x.TransactionType);
+            builder.HasOne(x => x.TransactionType)
+                .WithMany()
+                .HasForeignKey(p => p.TransactionTypeId);
+
+            builder.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(p => p.UserId);
 
             builder.HasMany(x => x.TransactionAmounts)
              .WithOne()

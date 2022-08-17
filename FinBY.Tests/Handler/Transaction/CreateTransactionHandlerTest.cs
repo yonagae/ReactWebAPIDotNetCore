@@ -5,6 +5,7 @@ using FinBY.Domain.Repositories;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using System;
 using System.Collections.Generic;
 
 namespace FinBY.Tests.Handler
@@ -18,11 +19,11 @@ namespace FinBY.Tests.Handler
             ITransactionRepository transactionRepository = Substitute.For<ITransactionRepository>();
             CreateTransactionHandler handler = new CreateTransactionHandler(transactionRepository);            
             var transactionAmounts = new List<TransactionAmount>() { new TransactionAmount(0, 1, 10) };
-            Transaction transaction = new Transaction(new TransactionType("Mercado"), 1, "Continente Gaia", "Continente", transactionAmounts, 11.0m);
+            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", transactionAmounts, 11.0m);
 
             var result = handler.Handle(new CreateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
-            transactionRepository.Received().InsertAsync(Arg.Is<Transaction>(transaction));
+            transactionRepository.Received().AddAsync(Arg.Is<Transaction>(transaction));
             result.Result.Success.Should().BeTrue();
             result.Result.Messages.Should().BeNullOrEmpty();
         }
@@ -32,11 +33,11 @@ namespace FinBY.Tests.Handler
         {
             ITransactionRepository transactionRepository = Substitute.For<ITransactionRepository>();
             CreateTransactionHandler handler = new CreateTransactionHandler(transactionRepository);
-            Transaction transaction = new Transaction(new TransactionType("Mercado"), 1, "Continente Gaia", "Continente", null, 11.0m);
+            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", null, 11.0m);
 
             var result = handler.Handle(new CreateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
-            transactionRepository.DidNotReceive().InsertAsync(Arg.Is<Transaction>(transaction));
+            transactionRepository.DidNotReceive().AddAsync(Arg.Is<Transaction>(transaction));
             result.Result.Success.Should().BeFalse();
             result.Result.Messages.Should().NotBeEmpty();  
         }

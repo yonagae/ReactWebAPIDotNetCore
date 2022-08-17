@@ -13,20 +13,33 @@ namespace FinBY.Domain.Handler
 {
     public class CreateTransactionAmountHandler : IRequestHandler<CreateTransactionAmountCommand, GenericChangeCommandResult>
     {
-        private GenericChangeCommandResult result;
-        public ITransactionAmountRepository _transactionAmountRepository { get; }
+        private readonly IRepositoryWrapper repositoryWrapper;
 
-        public CreateTransactionAmountHandler(ITransactionAmountRepository transactionAmountRepository)
+        public CreateTransactionAmountHandler(IRepositoryWrapper repositoryWrapper)
         {
-            _transactionAmountRepository = transactionAmountRepository;
+            this.repositoryWrapper = repositoryWrapper;
         } 
 
         public async Task<GenericChangeCommandResult> Handle(CreateTransactionAmountCommand request, CancellationToken cancellationToken)
         {
-            //TransactionAmountConverter conv = new TransactionAmountConverter();
-            //var result = await _transactionAmountRepository.InsertAsync(conv.Parse(request.TransactionAmount));
-            //return new GenericChangeCommandResult(true, "", result);
-            return null;
+            var validationResult = request.TransactionAmount.Validate();
+
+            if (validationResult.isValid)
+            {
+                var transaction = repositoryWrapper.TransactionRepository.GetById(request.TransactionAmount.TransactionId);
+                transaction.AddTransactionAmount(request.TransactionAmount);
+
+                repositoryWrapper.TransactionAmountRepository.Add(request.TransactionAmount);
+                repositoryWrapper.TransactionRepository.Update(transaction);
+
+                await repositoryWrapper.SaveAsync();
+
+                return new GenericChangeCommandResult(true, null, request.TransactionAmount);
+            }
+            else
+            {
+                return new GenericChangeCommandResult(false, validationResult.errorMessages, null);
+            }
         }
 
     }

@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FinBY.API\FinBY.API.csproj" />
     <ProjectReference Include="..\FinBY.Domain\FinBY.Domain.csproj" />
     <ProjectReference Include="..\FinBY.Infra\FinBY.Infra.csproj" />
   </ItemGroup>

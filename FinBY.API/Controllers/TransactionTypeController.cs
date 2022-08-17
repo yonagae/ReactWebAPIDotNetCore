@@ -37,7 +37,7 @@ namespace FinBY.API.Controllers
         {
             try
             {
-                var transactionTypes = await _transactionTypeRepository.SelectAsync();
+                var transactionTypes = await _transactionTypeRepository.GetAlltAsync();
                 var tsDTO = _mapper.Map<List<TransactionTypeDTO>>(transactionTypes);
                 return Ok(tsDTO);
             }

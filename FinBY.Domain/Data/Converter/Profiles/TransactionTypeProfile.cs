@@ -14,7 +14,8 @@ namespace FinBY.Domain.Data.Converter.Profiles
         {
             CreateMap<TransactionType, TransactionTypeDTO>();
             CreateMap<TransactionType, NewTransactionTypeDTO>();
-
+            CreateMap<NewTransactionTypeDTO, TransactionType>();
+            CreateMap<TransactionTypeDTO, TransactionType>();
         }
     }
 }

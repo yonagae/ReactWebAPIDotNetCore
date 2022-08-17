@@ -57,5 +57,10 @@ namespace FinBY.Infra.Repository
                 return _transactionAmountRepository;
             }
         }
+
+        public Task SaveAsync()
+        {
+            return _repoContext.SaveChangesAsync();
+        }
     }
 }

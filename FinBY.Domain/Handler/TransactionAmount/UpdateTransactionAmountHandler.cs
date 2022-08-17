@@ -13,25 +13,36 @@ namespace FinBY.Domain.Handler
 {
     public class UpdateTransactionAmountHandler : IRequestHandler<UpdateTransactionAmountCommand, GenericChangeCommandResult>
     {
-        private GenericChangeCommandResult result;
-        public ITransactionAmountRepository _transactionAmountRepository { get; }
+        private readonly IRepositoryWrapper repositoryWrapper;
 
-        public UpdateTransactionAmountHandler(ITransactionAmountRepository transactionAmountRepository)
+        public UpdateTransactionAmountHandler(IRepositoryWrapper repositoryWrapper)
         {
-            _transactionAmountRepository = transactionAmountRepository;
-        } 
+            this.repositoryWrapper = repositoryWrapper;
+        }
 
         public async Task<GenericChangeCommandResult> Handle(UpdateTransactionAmountCommand request, CancellationToken cancellationToken)
         {
-            //TransactionAmountConverter conv = new TransactionAmountConverter();
-            //var result = await _transactionAmountRepository.UpdateAsync(conv.Parse(request.TransactionAmount));
+            var validationResult = request.TransactionAmount.Validate();
 
-            ////if the data doesn't exist in the db
-            //if (result != null) return new GenericChangeCommandResult(false, "", result, true);
+            if (validationResult.isValid)
+            {
+                var oldTransactionAmount = repositoryWrapper.TransactionAmountRepository.GetById(request.TransactionAmount.Id);
+                var transaction = repositoryWrapper.TransactionRepository.GetById(request.TransactionAmount.TransactionId);
 
-            //return new GenericChangeCommandResult(true, "", result);
+                transaction.RemoveTransactionAmount(oldTransactionAmount);
+                transaction.AddTransactionAmount(request.TransactionAmount);
 
-            return null;
+                repositoryWrapper.TransactionAmountRepository.Update(request.TransactionAmount);
+                repositoryWrapper.TransactionRepository.Update(transaction);
+
+                await repositoryWrapper.SaveAsync();
+
+                return new GenericChangeCommandResult(true, null, request.TransactionAmount);
+            }
+            else
+            {
+                return new GenericChangeCommandResult(false, validationResult.errorMessages, null);
+            }
         }
 
     }

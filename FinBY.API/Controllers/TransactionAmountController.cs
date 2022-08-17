@@ -39,7 +39,7 @@ namespace FinBY.API.Controllers
         {
             try
             {
-                var transactionAmount = await _transactionAmountRepository.SelectByIdAsync(id);
+                var transactionAmount = await _transactionAmountRepository.GetByIdAsync(id);
                 var transactionAmountDTO = _mapper.Map<TransactionAmount>(transactionAmount);
                 return Ok(transactionAmountDTO);
             }

@@ -61,7 +61,7 @@ namespace FinBY.Infra.Repository
 
         public async Task<bool> DeleteAsync(TKey id)
         {
-            var result = await _dataset.SingleOrDefaultAsync(p => p.Id.Equals(id));
+            var result = await GetByIdAsync(id);
             if (result != null)
             {
                 _dataset.Remove(result);
@@ -73,20 +73,20 @@ namespace FinBY.Infra.Repository
                 return false;
             }
         }
-        public async Task<TEntity> InsertAsync(TEntity item)
+        public async Task<TEntity> AddAsync(TEntity item)
         {
             _dataset.Add(item);
             await _context.SaveChangesAsync();
             return item;
         }
 
-        public async Task<TEntity> SelectByIdAsync(TKey id)
+        public async Task<TEntity> GetByIdAsync(TKey id)
         {
 
             return await _dataset.SingleOrDefaultAsync(p => p.Id.Equals(id));
         }
 
-        public async Task<IEnumerable<TEntity>> SelectAsync()
+        public async Task<IEnumerable<TEntity>> GetAlltAsync()
         {
             return await _dataset.ToListAsync();
         }
@@ -103,7 +103,7 @@ namespace FinBY.Infra.Repository
             return item;
         }
 
-        public async Task<IEnumerable<TEntity>> SelectAsync(Expression<Func<TEntity, bool>> expression)
+        public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> expression)
         {
             return await _dataset.Where(expression).ToListAsync();
         }

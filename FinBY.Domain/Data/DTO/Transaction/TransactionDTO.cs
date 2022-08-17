@@ -10,6 +10,10 @@ namespace FinBY.Domain.Data.DTO
     public class TransactionDTO : NewTransactionDTO
     {
         public int Id { get; set; }
- 
+
+        public DateTime TimeStamp { get; set; }
+
+        public UserDTO User { get; set; }
+        public TransactionTypeDTO TransactionType { get; set; }
     }
 }

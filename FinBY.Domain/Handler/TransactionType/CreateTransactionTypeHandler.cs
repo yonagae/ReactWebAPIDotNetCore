@@ -22,9 +22,8 @@ namespace FinBY.Domain.Handler
         } 
 
         public async Task<GenericChangeCommandResult> Handle(CreateTransactionTypeCommand request, CancellationToken cancellationToken)
-        {
-            //TransactionTypeConverter conv = new TransactionTypeConverter();
-            //var result = await _transactionTypeRepository.InsertAsync(conv.Parse(request.TransactionType));
+        { 
+            var result = await _transactionTypeRepository.AddAsync(request.TransactionType);
 
             return new GenericChangeCommandResult(true, null, null);
         }

@@ -15,11 +15,15 @@ namespace FinBY.Domain.Entities
         [Required(ErrorMessage = "TimeStamp must be specified")]
         public DateTime TimeStamp { get; private set; }
 
+        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Date must be specified")]
+        public DateTime Date { get; private set; }
+
         [Required(ErrorMessage = "Description must be specified")]
-        public virtual TransactionType TransactionType { get; private set; }
+        public int TransactionTypeId { get; private set; }
 
         [Required(ErrorMessage = "User must be specified")]
-        public virtual int UserId { get; private set; }
+        public int UserId { get; private set; }
 
         [StringLength(100)]
         [Required(ErrorMessage = "Description must be specified")]     
@@ -38,15 +42,19 @@ namespace FinBY.Domain.Entities
         public IReadOnlyCollection<TransactionAmount> TransactionAmounts => _transactionAmounts;
 
 
+        public User User { get; private set; }
+        public TransactionType TransactionType { get; private set; }
+
         public Transaction()
         {
             _transactionAmounts = new List<TransactionAmount>();
         }
 
-        public Transaction(TransactionType transactionType, int userId, string description, string shortDescription, List<TransactionAmount> transactionAmounts, decimal totalAmount)
+        public Transaction(int transactionTypeId, int userId, DateTime date, string description, string shortDescription, List<TransactionAmount> transactionAmounts, decimal totalAmount)
         {
+            Date = date;
             TimeStamp = DateTime.Now;
-            TransactionType = transactionType;
+            TransactionTypeId = transactionTypeId;
             Description = description;
             ShortDescription = shortDescription;
             _transactionAmounts = transactionAmounts;

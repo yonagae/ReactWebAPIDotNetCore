@@ -5,6 +5,7 @@ using FinBY.Domain.Repositories;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using System;
 using System.Collections.Generic;
 
 namespace FinBY.Tests.Handler
@@ -18,7 +19,7 @@ namespace FinBY.Tests.Handler
             ITransactionRepository transactionRepository = Substitute.For<ITransactionRepository>();
             UpdateTransactionHandler handler = new UpdateTransactionHandler(transactionRepository);    
             var transactionAmounts = new List<TransactionAmount>() { new TransactionAmount(0, 1, 10) };
-            Transaction transaction = new Transaction(new TransactionType("Mercado"), 1, "Continente Gaia", "Continente", transactionAmounts, 11.0m);
+            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", transactionAmounts, 11.0m);
             transactionRepository.UpdateAsync(transaction).ReturnsForAnyArgs<Transaction>(transaction);
 
             var result = handler.Handle(new UpdateTransactionCommand(transaction), new System.Threading.CancellationToken());
@@ -34,7 +35,7 @@ namespace FinBY.Tests.Handler
             ITransactionRepository transactionRepository = Substitute.For<ITransactionRepository>();
             UpdateTransactionHandler handler = new UpdateTransactionHandler(transactionRepository);
             var transactionAmounts = new List<TransactionAmount>() { new TransactionAmount(0, 1, 10) };
-            Transaction transaction = new Transaction(new TransactionType("Mercado"), 1, "Continente Gaia", "Continente", transactionAmounts, 11.0m);
+            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", transactionAmounts, 11.0m);
             transactionRepository.UpdateAsync(transaction).ReturnsForAnyArgs<Transaction>(i => null);
 
 
@@ -51,7 +52,7 @@ namespace FinBY.Tests.Handler
             ITransactionRepository transactionRepository = Substitute.For<ITransactionRepository>();
             UpdateTransactionHandler handler = new UpdateTransactionHandler(transactionRepository);
             User user = new User("Jonh Main");
-            Transaction transaction = new Transaction(new TransactionType("Mercado"), 1, "Continente Gaia", "Continente", null, 11.0m);
+            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", null, 11.0m);
 
             var result = handler.Handle(new UpdateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
