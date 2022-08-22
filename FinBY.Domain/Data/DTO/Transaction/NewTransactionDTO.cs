@@ -18,6 +18,6 @@ namespace FinBY.Domain.Data.DTO
         [Range(0, 999999.99)]
         public Decimal TotalAmount { get; set; }
 
-        public DateTime Date;
+        public DateTime Date { get; set; }
     }
 }

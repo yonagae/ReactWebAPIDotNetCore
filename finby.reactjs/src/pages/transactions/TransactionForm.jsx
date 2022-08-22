@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import api from '../../api/transaction';
+import TransactionAmountsForm from '../transactionAmounts/TransactionAmountsForm';
 
 const transactionInicial = {
     id: 0,
@@ -12,10 +14,16 @@ const transactionInicial = {
 
 export default function TransactionForm(props) {
     const [transaction, setTransaction] = useState(transactionAtual());
+    const [transactionTypes, setTransactionTypes] = useState([]);
 
     useEffect(() => {
         if (props.ativSelecionada.id !== 0) setTransaction(props.ativSelecionada);
     }, [props.ativSelecionada]);
+
+    useEffect(() => {
+        getTransactionTypes().then(result => setTransactionTypes(result));
+    }, []);
+    
 
     const inputTextHandler = (e) => {
         const { name, value } = e.target;
@@ -48,6 +56,11 @@ export default function TransactionForm(props) {
         }
     }
 
+    async function getTransactionTypes () {
+        const response = await api.get('transactionTypes');
+        return response.data;
+    };  
+
     return (
         <>
             <form className='row g-3' onSubmit={handleSubmit}>
@@ -71,16 +84,10 @@ export default function TransactionForm(props) {
                         id='transactionTypeId'
                         className='form-select'
                     >
-                        <option value='0'>Selecione...</option>
-                        <option value='1'>Baixa</option>
-                        <option value='2'>Normal</option>
-                        <option value='3'>Alta</option>
-                        <option value='4'>Alta</option>
-                        <option value='5'>Alta</option>
-                        <option value='6'>Alta</option>
-                        <option value='7'>Alta</option>
-                        <option value='8'>Alta</option>
-                        <option value='9'>Alta</option>
+                        {transactionTypes.map((transtype) => (
+                            <option value={transtype.id}>{transtype.name}</option>
+                        ))}                           
+                       
                     </select>
                 </div>
 
@@ -118,6 +125,9 @@ export default function TransactionForm(props) {
                         className='form-control'
                     />
                     <hr />
+                </div>
+                <div>
+                    <TransactionAmountsForm />
                 </div>
                 <div className='col-12 mt-0'>
                     {transaction.id === 0 ? (
