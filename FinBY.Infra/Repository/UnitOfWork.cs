@@ -17,6 +17,7 @@ namespace FinBY.Infra.Repository
         private ITransactionRepository _transactionRepository;
         private ITransactionTypeRepository _transactionTypeRepository;
         private ITransactionAmountRepository _transactionAmountRepository;
+        private IUserRepository _userRepository;
 
         public UnitOfWork(DbContext repositoryContext)
         {
@@ -56,7 +57,20 @@ namespace FinBY.Infra.Repository
                 }
                 return _transactionAmountRepository;
             }
-        }  
+        }
+
+        public IUserRepository UserRepository
+        {
+            get
+            {
+                if (_userRepository == null)
+                {
+                    _userRepository = new UserRepository(_repoContext);
+                }
+                return _userRepository;
+            }
+        }
+
 
         public Task SaveAsync()
         {

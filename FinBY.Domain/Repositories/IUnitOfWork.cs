@@ -11,6 +11,7 @@ namespace FinBY.Domain.Repositories
         ITransactionRepository TransactionRepository { get; }
         ITransactionTypeRepository TransactionTypeRepository { get; }
         ITransactionAmountRepository TransactionAmountRepository { get; }
+        IUserRepository UserRepository { get; }
         Task SaveAsync();
     }
 }

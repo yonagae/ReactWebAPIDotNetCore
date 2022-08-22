@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react';
 import api from '../../api/transaction';
 import TransactionAmountsForm from '../transactionAmounts/TransactionAmountsForm';
+import DatePicker from "react-datepicker";
 
 const transactionInicial = {
     id: 0,
     date: new Date(),
     transactionTypeId: 0,
     userId: 0,
-    description: 'Description',
-    shortDescription: 'Shor Description',
+    description: '',
+    shortDescription: '',
     totalAmount: 0,
 };
 
 export default function TransactionForm(props) {
     const [transaction, setTransaction] = useState(transactionAtual());
     const [transactionTypes, setTransactionTypes] = useState([]);
+
+    const [startDate, setStartDate] = useState(new Date());
 
     useEffect(() => {
         if (props.ativSelecionada.id !== 0) setTransaction(props.ativSelecionada);
@@ -33,6 +36,9 @@ export default function TransactionForm(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        transaction.date = startDate;
+        //setTransaction({ ...transaction, datefghfgh: startDate });
 
         if (props.ativSelecionada.id !== 0) props.atualizarTransaction(transaction);
         else props.addTransaction(transaction);
@@ -84,8 +90,9 @@ export default function TransactionForm(props) {
                         id='transactionTypeId'
                         className='form-select'
                     >
+                        <option value='NaoDefinido'>Selecione...</option>
                         {transactionTypes.map((transtype) => (
-                            <option value={transtype.id}>{transtype.name}</option>
+                            <option key={transtype.id} value={transtype.id}>{transtype.name}</option>
                         ))}                           
                        
                     </select>
@@ -104,16 +111,19 @@ export default function TransactionForm(props) {
                 </div>
                 <div className='col-md-6'>
                     <label className='form-label'>Date</label>
-                    <input
-                        name='date'
-                        value={transaction.date}
-                        onChange={inputTextHandler}
-                        id='date'
-                        type='text'
+                    <style>
+                        {`.date-picker input {
+                              width: 100%;
+                              height: 38px;
+                          }`}
+                    </style>
+                    <DatePicker selected={startDate}
+                        onChange={(date: Date) => setStartDate(date)}
+                        dateFormat="dd/MM/yyyy"
+                        wrapperClassName="date-picker"
                         className='form-control'
                     />
                 </div>
-
                 <div className='col-md-12'>
                     <label className='form-label'>Description</label>
                     <textarea
@@ -126,9 +136,7 @@ export default function TransactionForm(props) {
                     />
                     <hr />
                 </div>
-                <div>
-                    <TransactionAmountsForm />
-                </div>
+                <TransactionAmountsForm transaction={transaction} />
                 <div className='col-12 mt-0'>
                     {transaction.id === 0 ? (
                         <button
@@ -141,18 +149,18 @@ export default function TransactionForm(props) {
                     ) : (
                         <>
                             <button
-                                className='btn btn-outline-success me-2'
+                                className='btn btn-info me-2'
                                 type='submit'
                             >
                                 <i className='fas fa-plus me-2'></i>
-                                Salvar
+                                Save
                             </button>
                             <button
-                                className='btn btn-outline-warning'
+                                className='btn btn-warning'
                                 onClick={handleCancelar}
                             >
-                                <i className='fas fa-plus me-2'></i>
-                                Cancelar
+                                <i className='fas fa-ban me-2'></i>
+                                Cancel
                             </button>
                         </>
                     )}
