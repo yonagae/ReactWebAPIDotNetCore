@@ -13,17 +13,17 @@ namespace FinBY.Domain.Handler
 {
     public class CreateTransactionTypeHandler : IRequestHandler<CreateTransactionTypeCommand, GenericChangeCommandResult>
     {
-        private GenericChangeCommandResult result;
-        public ITransactionTypeRepository _transactionTypeRepository { get; }
+        private IUnitOfWork _unitOfWork { get; }
 
-        public CreateTransactionTypeHandler(ITransactionTypeRepository transactionTypeRepository)
+        public CreateTransactionTypeHandler(IUnitOfWork unitOfWork)
         {
-            _transactionTypeRepository = transactionTypeRepository;
-        } 
+            _unitOfWork = unitOfWork;
+        }
 
         public async Task<GenericChangeCommandResult> Handle(CreateTransactionTypeCommand request, CancellationToken cancellationToken)
         { 
-            var result = await _transactionTypeRepository.AddAsync(request.TransactionType);
+             _unitOfWork.TransactionTypeRepository.Add(request.TransactionType);
+            await _unitOfWork.SaveAsync();
 
             return new GenericChangeCommandResult(true, null, null);
         }

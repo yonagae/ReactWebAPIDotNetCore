@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FinBY.Domain.Repositories
 {
-    public interface IRepositoryWrapper
+    public interface IUnitOfWork
     {
         ITransactionRepository TransactionRepository { get; }
         ITransactionTypeRepository TransactionTypeRepository { get; }

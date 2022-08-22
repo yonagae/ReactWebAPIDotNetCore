@@ -1,0 +1,14 @@
+
+
+npm install react-bootstrap bootstrap
+{/* The following line can be included in your src/index.js or App.js file*/}
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+https://fontawesome.com/docs/web/use-with/react/
+npm i --save @fortawesome/fontawesome-svg-core
+npm i --save @fortawesome/free-regular-svg-icons
+
+npm install bootswatch
+Add the following import to your top-level index.js (or App.js) file. Add it before any other .css imports.
+import "bootswatch/dist/[theme]/bootstrap.min.css";
+// TODO: Note: Replace ^[theme]^ (examples: darkly, slate, cosmo, spacelab, and superhero. See https://bootswatch.com/ for current theme names.)

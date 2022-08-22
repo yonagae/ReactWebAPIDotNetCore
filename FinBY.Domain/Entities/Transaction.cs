@@ -35,7 +35,7 @@ namespace FinBY.Domain.Entities
 
         [Required(ErrorMessage = "Total Ammount must be specified")]
         [DataType(DataType.Currency)]
-        public decimal TotalAmount { get; private set; }
+        public decimal TotalAmount { get; private set; } = 0;
 
         [MinLength(1)]
         [Required(ErrorMessage = "TransactionAmount must be specified")]
@@ -50,15 +50,19 @@ namespace FinBY.Domain.Entities
             _transactionAmounts = new List<TransactionAmount>();
         }
 
-        public Transaction(int transactionTypeId, int userId, DateTime date, string description, string shortDescription, List<TransactionAmount> transactionAmounts, decimal totalAmount)
+        public Transaction(int transactionTypeId, int userId, DateTime date, string description, string shortDescription, List<TransactionAmount> transactionAmounts)
         {
             Date = date;
             TimeStamp = DateTime.Now;
             TransactionTypeId = transactionTypeId;
             Description = description;
             ShortDescription = shortDescription;
-            _transactionAmounts = transactionAmounts;
-            TotalAmount = totalAmount;
+
+            _transactionAmounts = new List<TransactionAmount>();
+            if (transactionAmounts != null)
+                foreach (var transactionAmount in transactionAmounts)
+                    this.AddTransactionAmount(transactionAmount);
+
             UserId = userId;
         }
     }

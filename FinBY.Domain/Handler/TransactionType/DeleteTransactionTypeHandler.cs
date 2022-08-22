@@ -13,19 +13,21 @@ namespace FinBY.Domain.Handler
 {
     public class DeleteTransactionTypeHandler : IRequestHandler<DeleteTransactionTypeCommand, GenericChangeCommandResult>
     {
-        private GenericChangeCommandResult result;
-        public ITransactionTypeRepository _transactionTypeRepository { get; }
+        private IUnitOfWork _unitOfWork { get; }
 
-        public DeleteTransactionTypeHandler(ITransactionTypeRepository transactionTypeRepository)
+        public DeleteTransactionTypeHandler(IUnitOfWork unitOfWork)
         {
-            _transactionTypeRepository = transactionTypeRepository;
-        } 
+            _unitOfWork = unitOfWork;
+        }
 
         public async Task<GenericChangeCommandResult> Handle(DeleteTransactionTypeCommand request, CancellationToken cancellationToken)
         {
-            var result = await _transactionTypeRepository.DeleteAsync(request.TransactionTypeId);
 
-            if (!result)  return new GenericChangeCommandResult(false, new List<string>() { "Data not found" }, result, true);
+            var result = await _unitOfWork.TransactionTypeRepository.GetByIdAsync(request.TransactionTypeId);
+            if (result != null) return new GenericChangeCommandResult(false, new List<string>() { "Data not found" }, result, true);
+
+            _unitOfWork.TransactionTypeRepository.Remove(request.TransactionTypeId);
+            await _unitOfWork.SaveAsync();
 
             return new GenericChangeCommandResult(true, null, result);
         }

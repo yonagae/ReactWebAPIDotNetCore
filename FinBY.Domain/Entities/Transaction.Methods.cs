@@ -23,7 +23,6 @@ namespace FinBY.Domain.Entities
         {
             if (transactionAmount == null) return false;
             if (transactionAmount.TransactionId != this.Id) return false;
-            if (TotalAmount < transactionAmount.Amount) return false;
 
             _transactionAmounts.Remove(transactionAmount);
             TotalAmount -= transactionAmount.Amount;

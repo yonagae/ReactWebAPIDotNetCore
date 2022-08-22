@@ -13,12 +13,12 @@ namespace FinBY.Domain.Handler
 {
     public class CreateTransactionAmountHandler : IRequestHandler<CreateTransactionAmountCommand, GenericChangeCommandResult>
     {
-        private readonly IRepositoryWrapper repositoryWrapper;
+        private IUnitOfWork _unitOfWork { get; }
 
-        public CreateTransactionAmountHandler(IRepositoryWrapper repositoryWrapper)
+        public CreateTransactionAmountHandler(IUnitOfWork unitOfWork)
         {
-            this.repositoryWrapper = repositoryWrapper;
-        } 
+            _unitOfWork = unitOfWork;
+        }
 
         public async Task<GenericChangeCommandResult> Handle(CreateTransactionAmountCommand request, CancellationToken cancellationToken)
         {
@@ -26,13 +26,13 @@ namespace FinBY.Domain.Handler
 
             if (validationResult.isValid)
             {
-                var transaction = repositoryWrapper.TransactionRepository.GetById(request.TransactionAmount.TransactionId);
+                var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(request.TransactionAmount.TransactionId);
                 transaction.AddTransactionAmount(request.TransactionAmount);
 
-                repositoryWrapper.TransactionAmountRepository.Add(request.TransactionAmount);
-                repositoryWrapper.TransactionRepository.Update(transaction);
+                _unitOfWork.TransactionAmountRepository.Add(request.TransactionAmount);
+                _unitOfWork.TransactionRepository.Update(transaction);
 
-                await repositoryWrapper.SaveAsync();
+                await _unitOfWork.SaveAsync();
 
                 return new GenericChangeCommandResult(true, null, request.TransactionAmount);
             }

@@ -46,7 +46,8 @@ namespace FinBY.Infra.Mappings
 
             builder.HasOne(x => x.User)
                 .WithMany()
-                .HasForeignKey(p => p.UserId);
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.TransactionAmounts)
              .WithOne()

@@ -11,14 +11,14 @@ namespace FinBY.Infra.Repository
     /// <summary>
     /// Wrap the Repositories to make it easier to 
     /// </summary>
-    public class RepositoryWrapper : IRepositoryWrapper
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private DbContext _repoContext;
         private ITransactionRepository _transactionRepository;
         private ITransactionTypeRepository _transactionTypeRepository;
         private ITransactionAmountRepository _transactionAmountRepository;
 
-        public RepositoryWrapper(DbContext repositoryContext)
+        public UnitOfWork(DbContext repositoryContext)
         {
             _repoContext = repositoryContext;
         }
@@ -56,11 +56,29 @@ namespace FinBY.Infra.Repository
                 }
                 return _transactionAmountRepository;
             }
-        }
+        }  
 
         public Task SaveAsync()
         {
             return _repoContext.SaveChangesAsync();
+        }
+
+        private bool disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _repoContext.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

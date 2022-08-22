@@ -2,6 +2,7 @@
 using FinBY.Domain.Entities;
 using FinBY.Domain.Handler;
 using FinBY.Domain.Repositories;
+using FinBY.Tests.Controllers;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -16,14 +17,14 @@ namespace FinBY.Tests.Handler
         [TestMethod]
         public void Handle_ValidTransaction_ReturnsCreatedTransaction()
         {
-            ITransactionRepository transactionRepository = Substitute.For<ITransactionRepository>();
-            CreateTransactionHandler handler = new CreateTransactionHandler(transactionRepository);            
+            IUnitOfWork unitOfWork = new FakeUnitOfWork();
+            CreateTransactionHandler handler = new CreateTransactionHandler(unitOfWork);            
             var transactionAmounts = new List<TransactionAmount>() { new TransactionAmount(0, 1, 10) };
-            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", transactionAmounts, 11.0m);
+            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", transactionAmounts);
 
             var result = handler.Handle(new CreateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
-            transactionRepository.Received().AddAsync(Arg.Is<Transaction>(transaction));
+            unitOfWork.TransactionRepository.Received().Add(Arg.Is<Transaction>(transaction));
             result.Result.Success.Should().BeTrue();
             result.Result.Messages.Should().BeNullOrEmpty();
         }
@@ -31,13 +32,13 @@ namespace FinBY.Tests.Handler
         [TestMethod]
         public void Handle_InvalidTransaction_ReturnsCreatedTransaction()
         {
-            ITransactionRepository transactionRepository = Substitute.For<ITransactionRepository>();
-            CreateTransactionHandler handler = new CreateTransactionHandler(transactionRepository);
-            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", null, 11.0m);
+            IUnitOfWork unitOfWork = new FakeUnitOfWork();
+            CreateTransactionHandler handler = new CreateTransactionHandler(unitOfWork);
+            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", null);
 
             var result = handler.Handle(new CreateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
-            transactionRepository.DidNotReceive().AddAsync(Arg.Is<Transaction>(transaction));
+            unitOfWork.TransactionRepository.DidNotReceive().Add(Arg.Is<Transaction>(transaction));
             result.Result.Success.Should().BeFalse();
             result.Result.Messages.Should().NotBeEmpty();  
         }

@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace FinBY.Tests.Controllers
 {
-    public class FakeRepositoryWrapper : IRepositoryWrapper
+    public class FakeUnitOfWork  : IUnitOfWork
     {
         private ITransactionRepository _transactionRepository;
         private ITransactionTypeRepository _transactionTypeRepository;
         private ITransactionAmountRepository _transactionAmountRepository;
 
-        public FakeRepositoryWrapper()
+        public FakeUnitOfWork ()
         {
             _transactionRepository = Substitute.For<ITransactionRepository>();
             _transactionTypeRepository = Substitute.For<ITransactionTypeRepository>();

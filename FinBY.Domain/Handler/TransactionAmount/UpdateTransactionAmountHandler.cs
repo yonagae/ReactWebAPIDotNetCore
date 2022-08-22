@@ -13,11 +13,11 @@ namespace FinBY.Domain.Handler
 {
     public class UpdateTransactionAmountHandler : IRequestHandler<UpdateTransactionAmountCommand, GenericChangeCommandResult>
     {
-        private readonly IRepositoryWrapper repositoryWrapper;
+        private IUnitOfWork _unitOfWork { get; }
 
-        public UpdateTransactionAmountHandler(IRepositoryWrapper repositoryWrapper)
+        public UpdateTransactionAmountHandler(IUnitOfWork unitOfWork)
         {
-            this.repositoryWrapper = repositoryWrapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<GenericChangeCommandResult> Handle(UpdateTransactionAmountCommand request, CancellationToken cancellationToken)
@@ -26,16 +26,16 @@ namespace FinBY.Domain.Handler
 
             if (validationResult.isValid)
             {
-                var oldTransactionAmount = repositoryWrapper.TransactionAmountRepository.GetById(request.TransactionAmount.Id);
-                var transaction = repositoryWrapper.TransactionRepository.GetById(request.TransactionAmount.TransactionId);
+                var oldTransactionAmount = await _unitOfWork.TransactionAmountRepository.GetByIdAsync(request.TransactionAmount.Id);
+                var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(request.TransactionAmount.TransactionId);
 
                 transaction.RemoveTransactionAmount(oldTransactionAmount);
                 transaction.AddTransactionAmount(request.TransactionAmount);
 
-                repositoryWrapper.TransactionAmountRepository.Update(request.TransactionAmount);
-                repositoryWrapper.TransactionRepository.Update(transaction);
+                _unitOfWork.TransactionAmountRepository.Update(request.TransactionAmount);
+                _unitOfWork.TransactionRepository.Update(transaction);
 
-                await repositoryWrapper.SaveAsync();
+                await _unitOfWork.SaveAsync();
 
                 return new GenericChangeCommandResult(true, null, request.TransactionAmount);
             }

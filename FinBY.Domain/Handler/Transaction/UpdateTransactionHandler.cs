@@ -14,13 +14,12 @@ namespace FinBY.Domain.Handler
 {
     public class UpdateTransactionHandler : IRequestHandler<UpdateTransactionCommand, GenericChangeCommandResult>
     {
-        private GenericChangeCommandResult result;
-        public ITransactionRepository _transactionRepository { get; }
+        private IUnitOfWork _unitOfWork { get; }
 
-        public UpdateTransactionHandler(ITransactionRepository transactionRepository)
+        public UpdateTransactionHandler(IUnitOfWork unitOfWork)
         {
-            _transactionRepository = transactionRepository;
-        } 
+            _unitOfWork = unitOfWork;
+        }
 
         public async Task<GenericChangeCommandResult> Handle(UpdateTransactionCommand request, CancellationToken cancellationToken)
         {
@@ -28,12 +27,14 @@ namespace FinBY.Domain.Handler
 
             if (validationResult.isValid)
             {
-                var result = await _transactionRepository.UpdateAsync(request.Transaction);
+                var result = await _unitOfWork.TransactionRepository.GetByIdAsync(request.Transaction.Id);
+                if (result == null) 
+                    return new GenericChangeCommandResult(false, new List<string>() { "Transaction not found" }, result, true);
 
-                //if the data doesn't exist in the db
-                if (result == null) return new GenericChangeCommandResult(false, new List<string>() { "Transaction not found" }, result, true);
+                _unitOfWork.TransactionRepository.Update(request.Transaction);
+                await _unitOfWork.SaveAsync();               
 
-                return new GenericChangeCommandResult(true, null, result);
+                return new GenericChangeCommandResult(true, null, request.Transaction);
             }
             else
             {

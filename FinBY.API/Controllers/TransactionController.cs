@@ -6,8 +6,8 @@ using FinBY.Domain.Entities;
 using FinBY.Domain.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using FinBY.Domain.Data.PagedResult;
+using FinBY.API.Helper;
 
 namespace FinBY.API.Controllers
 {
@@ -16,8 +16,7 @@ namespace FinBY.API.Controllers
     public class TransactionController : ControllerBase
     {
         private readonly ILoggerManager _logger;
-        private ITransactionRepository _transactionRepository;
-        private ITransactionAmountRepository _transactionAmountRepository;
+        private IUnitOfWork _unitOfWork;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
@@ -25,23 +24,46 @@ namespace FinBY.API.Controllers
             IMapper mapper,
             IMediator mediator,
             ILoggerManager logger,
-            IRepositoryWrapper repositoryWrapper)
+            IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _mediator = mediator;
             _logger = logger;
-            _transactionRepository = repositoryWrapper.TransactionRepository;
-            _transactionAmountRepository = repositoryWrapper.TransactionAmountRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllTransactions()
         {
             try
-            {
-                var transactions = await _transactionRepository.GetAllWithDetailsAsList();
+            { 
+                var transactions = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsListAsync();
                 var tsDTOs = _mapper.Map<List<TransactionDTO>>(transactions);
                 return Ok(tsDTOs);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside the Transaction get action: {ex}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+
+        [HttpGet("paged")]
+        [ProducesResponseType(typeof(List<TransactionDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetDetailedTransactionsByParams([FromQuery] PagedTransactionParams pageParams)
+        {
+            try
+            {
+                var pagedResult = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(pageParams);
+
+                var alunosResult = _mapper.Map<List<TransactionDTO>>(pagedResult.Results);
+
+                if (Response != null)
+                    Response.AddPagination(pagedResult.CurrentPage, pagedResult.PageSize, pagedResult.RowCount, pagedResult.PageCount);
+
+                return Ok(alunosResult);
             }
             catch (Exception ex)
             {
@@ -58,10 +80,6 @@ namespace FinBY.API.Controllers
                 if (transaction == null)
                 {
                     return BadRequest("Owner object is null");
-                }
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest("Invalid model object");
                 }
 
                 var trans = _mapper.Map<Transaction>(transaction);
@@ -142,7 +160,7 @@ namespace FinBY.API.Controllers
         {
             try
             {
-                var transactionAmounts = await _transactionAmountRepository.GetTransactionAmountsByTransactionIdAsync(id);
+                var transactionAmounts = await _unitOfWork.TransactionAmountRepository.GetTransactionAmountsByTransactionIdAsync(id);
                 var transDTOList = _mapper.Map<List<TransactionAmountDTO>>(transactionAmounts);
                 return Ok(transDTOList);
             }

@@ -15,8 +15,7 @@ namespace FinBY.Tests.Queries
     {
         private IList<TransactionAmount> _transactions;
 
-        [TestInitialize]
-        public void Setup()
+        public TransactionAmountQueriesTest()
         {
             _transactions = new List<TransactionAmount>();
             _transactions.Add(new TransactionAmount(1, 1, 10.02m));

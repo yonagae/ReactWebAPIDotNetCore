@@ -1,4 +1,5 @@
-﻿using FinBY.Infra.Context;
+﻿using FinBY.Domain.Entities;
+using FinBY.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -15,6 +16,15 @@ namespace FinBY.DBTests
         private static readonly object _lock = new();
         private static bool _databaseInitialized;
 
+        private static TestApplicationDbContext _Instance = null;
+        public static TestApplicationDbContext Instance
+        {
+            get
+            {
+                return _Instance;
+            }
+        }
+
         [AssemblyInitialize]
         public static void Initialize(TestContext context123)
         {
@@ -22,16 +32,33 @@ namespace FinBY.DBTests
             {
                 if (!_databaseInitialized)
                 {
-                    using (var context = new TestApplicationDbContext())
-                    {
-                        context.Database.EnsureDeleted();
-                        context.Database.EnsureCreated();
-                        context.SaveChanges();
-                    }
+                    _Instance = new TestApplicationDbContext();
+                    _Instance.Database.EnsureDeleted();
+                    _Instance.Database.EnsureCreated();
+
+                    _Instance.AddRange(
+                      new User("Jonh Main"),
+                      new User("Batman"));
+
+                    _Instance.AddRange(
+                      new TransactionType("Casa"),
+                      new TransactionType("Mercado"),
+                      new TransactionType("Pessoal"),
+                      new TransactionType("Luz"),
+                      new TransactionType("Agua"));
+
+                    _Instance.SaveChanges();
 
                     _databaseInitialized = true;
                 }
             }
         }
-   }
+
+
+        [AssemblyCleanup]
+        public static void CleanUp()
+        {
+            _Instance.Dispose();
+        }
+    }
 }

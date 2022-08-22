@@ -2,6 +2,7 @@
 using FinBY.Domain.Entities;
 using FinBY.Domain.Handler;
 using FinBY.Domain.Repositories;
+using FinBY.Tests.Controllers;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -18,13 +19,13 @@ namespace FinBY.Tests.Handler
         [TestMethod]
         public void Handle_NonExistingTransaction_Fails()
         {
-            ITransactionRepository transactionRepository = Substitute.For<ITransactionRepository>();
-            DeleteTransactionHandler handler = new DeleteTransactionHandler(transactionRepository);
-            transactionRepository.GetByIdAsync(TRANSACTION_ID).Returns<Transaction>(i => null);
+            IUnitOfWork unitOfWork = new FakeUnitOfWork();
+            DeleteTransactionHandler handler = new DeleteTransactionHandler(unitOfWork);
+            unitOfWork.TransactionRepository.GetByIdAsync(TRANSACTION_ID).Returns<Transaction>(i => null);
 
             var result = handler.Handle(new DeleteTransactionCommand(TRANSACTION_ID), new System.Threading.CancellationToken());
 
-            transactionRepository.Received().DeleteAsync(TRANSACTION_ID);
+            unitOfWork.TransactionRepository.DidNotReceive().Remove(TRANSACTION_ID);
             result.Result.Success.Should().BeFalse();
             result.Result.Messages.Should().NotBeNullOrEmpty();
         }
@@ -32,15 +33,15 @@ namespace FinBY.Tests.Handler
         [TestMethod]
         public void Handle_ValidTransaction_ReturnsCreatedTransaction()
         {
-            ITransactionRepository transactionRepository = Substitute.For<ITransactionRepository>();
-            DeleteTransactionHandler handler = new DeleteTransactionHandler(transactionRepository);
-            transactionRepository.GetByIdAsync(TRANSACTION_ID).Returns<Transaction>(new Transaction());
+            IUnitOfWork unitOfWork = new FakeUnitOfWork();
+            DeleteTransactionHandler handler = new DeleteTransactionHandler(unitOfWork);
+            unitOfWork.TransactionRepository.GetByIdAsync(TRANSACTION_ID).Returns<Transaction>(new Transaction());
 
             var result = handler.Handle(new DeleteTransactionCommand(TRANSACTION_ID), new System.Threading.CancellationToken());
 
-            transactionRepository.Received().DeleteAsync(TRANSACTION_ID);
-            result.Result.Success.Should().BeFalse();
-            result.Result.Messages.Should().NotBeNullOrEmpty();
+            unitOfWork.TransactionRepository.Received().Remove(TRANSACTION_ID);
+            result.Result.Success.Should().BeTrue();
+            result.Result.Messages.Should().BeNullOrEmpty();
         }
     }
 }

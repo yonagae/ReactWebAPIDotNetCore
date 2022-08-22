@@ -13,26 +13,26 @@ namespace FinBY.Domain.Handler
 {
     public class DeleteTransactionAmountHandler : IRequestHandler<DeleteTransactionAmountCommand, GenericChangeCommandResult>
     {
-        private readonly IRepositoryWrapper repositoryWrapper;
+        private IUnitOfWork _unitOfWork { get; }
 
-        public DeleteTransactionAmountHandler(IRepositoryWrapper repositoryWrapper)
+        public DeleteTransactionAmountHandler(IUnitOfWork unitOfWork)
         {
-            this.repositoryWrapper = repositoryWrapper;
-        } 
+            _unitOfWork = unitOfWork;
+        }
 
         public async Task<GenericChangeCommandResult> Handle(DeleteTransactionAmountCommand request, CancellationToken cancellationToken)
         {
-            var transactionAmount = repositoryWrapper.TransactionAmountRepository.GetById(request.TransactionAmountId);
+            var transactionAmount = await _unitOfWork.TransactionAmountRepository.GetByIdAsync(request.TransactionAmountId);
 
             if (transactionAmount == null) return new GenericChangeCommandResult(false, new List<string>() { "Transaction Amount not found" }, transactionAmount, true);
 
-            var transaction = repositoryWrapper.TransactionRepository.GetById(transactionAmount.TransactionId);
+            var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(transactionAmount.TransactionId);
 
             transaction.RemoveTransactionAmount(transactionAmount);
 
-            this.repositoryWrapper.TransactionAmountRepository.Remove(request.TransactionAmountId);
-            this.repositoryWrapper.TransactionRepository.Update(transaction);
-            await this.repositoryWrapper.SaveAsync();
+            this._unitOfWork.TransactionAmountRepository.Remove(request.TransactionAmountId);
+            this._unitOfWork.TransactionRepository.Update(transaction);
+            await this._unitOfWork.SaveAsync();
 
             return new GenericChangeCommandResult(true, null, null);
         }

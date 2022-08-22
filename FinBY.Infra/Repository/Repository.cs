@@ -28,16 +28,6 @@ namespace FinBY.Infra.Repository
             _dataset.Add(obj);
         }
 
-        public virtual TEntity GetById(TKey id)
-        {
-            return _dataset.Find(id);
-        }
-
-        public virtual IQueryable<TEntity> GetAll()
-        {
-            return _dataset;
-        }
-
         public virtual void Update(TEntity obj)
         {
             _dataset.Update(obj);
@@ -53,61 +43,30 @@ namespace FinBY.Infra.Repository
             return _context.SaveChanges();
         }
 
+        public Task SaveChangesAsync()
+        {
+            return _context.SaveChangesAsync();
+        }
+
         public void Dispose()
         {
             _context.Dispose();
             GC.SuppressFinalize(this);
         }
 
-        public async Task<bool> DeleteAsync(TKey id)
-        {
-            var result = await GetByIdAsync(id);
-            if (result != null)
-            {
-                _dataset.Remove(result);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public async Task<TEntity> AddAsync(TEntity item)
-        {
-            _dataset.Add(item);
-            await _context.SaveChangesAsync();
-            return item;
-        }
-
         public async Task<TEntity> GetByIdAsync(TKey id)
         {
-
             return await _dataset.SingleOrDefaultAsync(p => p.Id.Equals(id));
         }
 
-        public async Task<IEnumerable<TEntity>> GetAlltAsync()
+        public async Task<List<TEntity>> GetAllAsync()
         {
             return await _dataset.ToListAsync();
-        }
-
-        public async Task<TEntity> UpdateAsync(TEntity item)
-        {
-            var result = await _dataset.SingleOrDefaultAsync(p => p.Id.Equals(item.Id));
-
-            if (result == null)
-                return null;
-
-            _context.Entry(result).CurrentValues.SetValues(item);
-            await _context.SaveChangesAsync();
-            return item;
-        }
-
-        public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> expression)
+        }      
+        public async Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> expression)
         {
             return await _dataset.Where(expression).ToListAsync();
         }
-
 
         public PagedResult<TEntity> GetPaged(int page, int pageSize)
         {
