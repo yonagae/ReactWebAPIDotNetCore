@@ -3,14 +3,15 @@ import api from '../../api/transaction';
 import TransactionAmountsForm from '../transactionAmounts/TransactionAmountsForm';
 import DatePicker from "react-datepicker";
 
-const transactionInicial = {
+const initialTransaction = {
     id: 0,
     date: new Date(),
     transactionTypeId: 0,
-    userId: 0,
+    userId: 1,
     description: '',
     shortDescription: '',
     totalAmount: 0,
+    transactionAmounts: [{ id: 0, userId: '0', amount: '0'}]
 };
 
 export default function TransactionForm(props) {
@@ -34,6 +35,15 @@ export default function TransactionForm(props) {
         setTransaction({ ...transaction, [name]: value });
     };
 
+    const updateTotalAmount = () => {
+        const totalAmountSum = transaction.transactionAmounts.reduce(
+            (accumulator, transAmount) => accumulator + parseFloat(transAmount.amount), 0);
+
+        console.log(totalAmountSum);
+
+        setTransaction({ ...transaction, totalAmount: totalAmountSum });
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -43,7 +53,7 @@ export default function TransactionForm(props) {
         if (props.ativSelecionada.id !== 0) props.atualizarTransaction(transaction);
         else props.addTransaction(transaction);
 
-        setTransaction(transactionInicial);
+        setTransaction(initialTransaction);
     };
 
     const handleCancelar = (e) => {
@@ -51,14 +61,14 @@ export default function TransactionForm(props) {
 
         props.cancelarTransaction();
 
-        setTransaction(transactionInicial);
+        setTransaction(initialTransaction);
     };
 
     function transactionAtual() {
         if (props.ativSelecionada.id !== 0) {
             return props.ativSelecionada;
         } else {
-            return transactionInicial;
+            return initialTransaction;
         }
     }
 
@@ -90,25 +100,13 @@ export default function TransactionForm(props) {
                         id='transactionTypeId'
                         className='form-select'
                     >
-                        <option value='NaoDefinido'>Selecione...</option>
+                        <option value='NaoDefinido'>Select...</option>
                         {transactionTypes.map((transtype) => (
                             <option key={transtype.id} value={transtype.id}>{transtype.name}</option>
                         ))}                           
                        
                     </select>
-                </div>
-
-                <div className='col-md-6'>
-                    <label className='form-label'>Total Amount</label>
-                    <input
-                        name='totalAmount'
-                        value={transaction.totalAmount}
-                        onChange={inputTextHandler}
-                        id='totalAmount'
-                        type='text'
-                        className='form-control'
-                    />
-                </div>
+                </div>                
                 <div className='col-md-6'>
                     <label className='form-label'>Date</label>
                     <style>
@@ -124,6 +122,18 @@ export default function TransactionForm(props) {
                         className='form-control'
                     />
                 </div>
+                <div className='col-md-6'>
+                    <label className='form-label'>Total Amount</label>
+                    <input
+                        name='totalAmount'
+                        disabled
+                        value={transaction.totalAmount}
+                        id='totalAmount'
+                        type='text'
+                        className='form-control readonly'
+                        aria-label='Disabled input example'
+                    />
+                </div>
                 <div className='col-md-12'>
                     <label className='form-label'>Description</label>
                     <textarea
@@ -136,7 +146,12 @@ export default function TransactionForm(props) {
                     />
                     <hr />
                 </div>
-                <TransactionAmountsForm transaction={transaction} />
+
+                <TransactionAmountsForm
+                    transaction={transaction}
+                    updateTotalAmount={updateTotalAmount}
+                />
+
                 <div className='col-12 mt-0'>
                     {transaction.id === 0 ? (
                         <button
@@ -152,7 +167,7 @@ export default function TransactionForm(props) {
                                 className='btn btn-info me-2'
                                 type='submit'
                             >
-                                <i className='fas fa-plus me-2'></i>
+                                <i className='fas fa-save me-2'></i>
                                 Save
                             </button>
                             <button

@@ -47,7 +47,7 @@ export default function Transaction() {
 
     const addTransaction = async (ativ) => {
         handleAtiviadeModal();
-        const response = await api.post('transaction', ativ);
+        const response = await api.post('transactions', ativ);
         console.log(response.data);
         setTransactions([...transactions, response.data]);
     };
@@ -59,7 +59,7 @@ export default function Transaction() {
 
     const atualizarTransaction = async (ativ) => {
         handleAtiviadeModal();
-        const response = await api.put(`transaction/${ativ.id}`, ativ);
+        const response = await api.put(`transactions/${ativ.id}`, ativ);
         const { id } = response.data;
         setTransactions(
             transactions.map((item) => (item.id === id ? response.data : item))
@@ -69,7 +69,7 @@ export default function Transaction() {
 
     const deletarTransaction = async (id) => {
         handleConfirmModal(0);
-        if (await api.delete(`transaction/${id}`)) {
+        if (await api.delete(`transactions/${id}`)) {
             const transactionsFiltradas = transactions.filter(
                 (transaction) => transaction.id !== id
             );

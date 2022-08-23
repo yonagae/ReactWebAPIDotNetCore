@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
+import { Alert } from 'react-bootstrap';
 import api from '../../api/transaction';
 
 export default function TransactionAmountsForm(props) {
-    const [formFields, setFormFields] = useState([
-        { userid: '0', amount: '' },
-    ])
+    const [formFields, setFormFields] = useState(props.transaction.transactionAmounts)
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
@@ -20,7 +19,8 @@ export default function TransactionAmountsForm(props) {
         let data = [...formFields];
         data[index][event.target.name] = event.target.value;
         setFormFields(data);
-        props.transaction.amounts = formFields;
+        props.transaction.transactionAmounts = formFields;
+        props.updateTotalAmount();
     }
 
     const submit = (e) => {
@@ -31,8 +31,14 @@ export default function TransactionAmountsForm(props) {
     const addFields = (e) => {
         e.preventDefault();
 
+        if (formFields.length == users.length) {
+            alert('the number of transaction amounts cannot be bigger the the list of user')
+            return;
+        }
+
         let object = {
-            userid: '0',
+            id : '0',
+            userId: '0',
             amount: ''
         }
 
@@ -44,13 +50,14 @@ export default function TransactionAmountsForm(props) {
         let data = [...formFields];
         data.splice(index, 1)
         setFormFields(data)
+        props.transaction.transactionAmounts = formFields;
     }
 
 
     return (
         <div className="TransactionAmountsForm" >
 
-            <button className='btn btn-success float-end' onClick={addFields}>Add More</button>
+            <button className='btn btn-success float-end fa-plus  me-2' onClick={addFields}> Add</button>
 
             <table className='table table-striped table-hover align-middle'>
                 <thead className='table-dark mt-3 align-middle'>
@@ -66,20 +73,19 @@ export default function TransactionAmountsForm(props) {
                             <tr key={index}>
                                 <td>
                                     <select
-                                        name='userid'
-                                        value={form.id}
-                                        defaultValue={0}
+                                        name='userId'
+                                        value={form.userId}
                                         onChange={event => handleFormChange(event, index)}
-                                        id='userid'
+                                        id='userId'
                                         className="form-select form-select-md"
                                     >
-                                        <option key='0'  value='0'>Selecione...</option>
+                                        <option key='0'  value='0'>Select...</option>
                                         {users.map((user) => (
                                             <option key={user.id} value={user.id}>{user.name}</option>
                                         ))}
-
                                     </select>
                                 </td>
+
                                 <td>
                                     <input
                                         name='amount'
@@ -92,7 +98,7 @@ export default function TransactionAmountsForm(props) {
                                 </td>
                                 <td >
                                     <button
-                                        className='btn btn-danger'
+                                        className='btn btn-danger '
                                         onClick={(e) => removeFields(e, index)}
                                     >
                                         Remove

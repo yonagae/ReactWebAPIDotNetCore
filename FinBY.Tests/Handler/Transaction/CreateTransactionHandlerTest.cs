@@ -20,7 +20,8 @@ namespace FinBY.Tests.Handler
             IUnitOfWork unitOfWork = new FakeUnitOfWork();
             CreateTransactionHandler handler = new CreateTransactionHandler(unitOfWork);            
             var transactionAmounts = new List<TransactionAmount>() { new TransactionAmount(0, 1, 10) };
-            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", transactionAmounts);
+            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente");
+            transaction.AddAmounts(transactionAmounts);
 
             var result = handler.Handle(new CreateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
@@ -34,7 +35,7 @@ namespace FinBY.Tests.Handler
         {
             IUnitOfWork unitOfWork = new FakeUnitOfWork();
             CreateTransactionHandler handler = new CreateTransactionHandler(unitOfWork);
-            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", null);
+            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente");
 
             var result = handler.Handle(new CreateTransactionCommand(transaction), new System.Threading.CancellationToken());
 

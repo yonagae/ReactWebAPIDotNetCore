@@ -9,10 +9,6 @@ namespace FinBY.Domain.Entities
 {
     public class Entity : IEntity<int>
     {
-        public Entity()
-        {
-        }
-
         public int Id { get;  set; }
 
         /// <summary>

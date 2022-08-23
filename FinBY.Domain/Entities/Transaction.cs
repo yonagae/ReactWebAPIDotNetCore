@@ -45,12 +45,8 @@ namespace FinBY.Domain.Entities
         public User User { get; private set; }
         public TransactionType TransactionType { get; private set; }
 
-        public Transaction()
-        {
-            _transactionAmounts = new List<TransactionAmount>();
-        }
 
-        public Transaction(int transactionTypeId, int userId, DateTime date, string description, string shortDescription, List<TransactionAmount> transactionAmounts)
+        public Transaction(int transactionTypeId, int userId, DateTime date, string description, string shortDescription)
         {
             Date = date;
             TimeStamp = DateTime.Now;
@@ -59,9 +55,7 @@ namespace FinBY.Domain.Entities
             ShortDescription = shortDescription;
 
             _transactionAmounts = new List<TransactionAmount>();
-            if (transactionAmounts != null)
-                foreach (var transactionAmount in transactionAmounts)
-                    this.AddTransactionAmount(transactionAmount);
+       
 
             UserId = userId;
         }

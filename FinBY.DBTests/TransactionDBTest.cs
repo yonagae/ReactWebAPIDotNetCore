@@ -1,6 +1,7 @@
 using FinBY.Domain.Commands;
 using FinBY.Domain.Entities;
 using FinBY.Domain.Handler;
+using FinBY.Domain.Repositories;
 using FinBY.Infra.Repository;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -22,16 +23,21 @@ namespace FinBY.DBTests
             TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[Transaction] where 1 = 1");   
         }
 
+        private IUnitOfWork _unitOfWork;
+        public TransactionDBTest()
+        {
+            _unitOfWork = new UnitOfWork(TestDatabaseFixture.Instance);
+        }
+
         [TestMethod]
         public async Task CreateTransaction()
         {
-            UnitOfWork unitOfWork = new UnitOfWork(TestDatabaseFixture.Instance);
-            Transaction transaction = await CreateValidTransaction(unitOfWork);
+            Transaction transaction = await CreateValidTransaction(_unitOfWork);
 
-            CreateTransactionHandler createTransactionHandler = new CreateTransactionHandler(unitOfWork);
+            CreateTransactionHandler createTransactionHandler = new CreateTransactionHandler(_unitOfWork);
             await createTransactionHandler.Handle(new CreateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
-            var transactionList = await unitOfWork.TransactionRepository.GetAllWithDetailsAsListAsync();
+            var transactionList = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsListAsync();
             transactionList.Count.Should().Be(1);
             transactionList[0].Id.Should().BeGreaterThan(0);
             transactionList[0].TotalAmount.Should().Be(30.85m);
@@ -49,16 +55,15 @@ namespace FinBY.DBTests
         [TestMethod]
         public async Task UpdateTransaction()
         {
-            UnitOfWork unitOfWork = new UnitOfWork(TestDatabaseFixture.Instance);
-            Transaction transaction = await CreateValidTransaction(unitOfWork);
-            CreateTransactionHandler createTransactionHandler = new CreateTransactionHandler(unitOfWork);
+            Transaction transaction = await CreateValidTransaction(_unitOfWork);
+            CreateTransactionHandler createTransactionHandler = new CreateTransactionHandler(_unitOfWork);
             await createTransactionHandler.Handle(new CreateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
-            transaction.AddTransactionAmount(new TransactionAmount(transaction.Id, 1, 11.11m));
-            UpdateTransactionHandler updateTransactionHandler = new UpdateTransactionHandler(unitOfWork);
+            transaction.AddAmount(new TransactionAmount(transaction.Id, 1, 11.11m));
+            UpdateTransactionHandler updateTransactionHandler = new UpdateTransactionHandler(_unitOfWork);
             await updateTransactionHandler.Handle(new UpdateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
-            var transactionList = await unitOfWork.TransactionRepository.GetAllWithDetailsAsListAsync();
+            var transactionList = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsListAsync();
             transactionList.Count.Should().Be(1);
             transactionList[0].Id.Should().BeGreaterThan(0);
             transactionList[0].TotalAmount.Should().Be(41.96m);
@@ -78,22 +83,21 @@ namespace FinBY.DBTests
         [TestMethod]
         public async Task DeleteTransaction()
         {
-            UnitOfWork unitOfWork = new UnitOfWork(TestDatabaseFixture.Instance);
-            Transaction transaction = await CreateValidTransaction(unitOfWork);
-            CreateTransactionHandler createTransactionHandler = new CreateTransactionHandler(unitOfWork);
+            Transaction transaction = await CreateValidTransaction(_unitOfWork);
+            CreateTransactionHandler createTransactionHandler = new CreateTransactionHandler(_unitOfWork);
             var resultTra = await createTransactionHandler.Handle(new CreateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
-            DeleteTransactionHandler deleteTransaction = new DeleteTransactionHandler(unitOfWork);
+            DeleteTransactionHandler deleteTransaction = new DeleteTransactionHandler(_unitOfWork);
             var result = await deleteTransaction.Handle(new DeleteTransactionCommand(((Transaction)resultTra.Data).Id), new System.Threading.CancellationToken());
 
-            var transactionList = await unitOfWork.TransactionRepository.GetAllWithDetailsAsListAsync();
+            var transactionList = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsListAsync();
             transactionList.Count.Should().Be(0);
-            (await unitOfWork.TransactionRepository.GetAllAsync()).Count.Should().Be(0);
-            (await unitOfWork.TransactionAmountRepository.GetAllAsync()).Count.Should().Be(0);
+            (await _unitOfWork.TransactionRepository.GetAllAsync()).Count.Should().Be(0);
+            (await _unitOfWork.TransactionAmountRepository.GetAllAsync()).Count.Should().Be(0);
         }
 
 
-        private static async Task<Transaction> CreateValidTransaction(UnitOfWork unitOfWork)
+        private static async Task<Transaction> CreateValidTransaction(IUnitOfWork unitOfWork)
         {
             var transactionType = (await unitOfWork.TransactionTypeRepository.GetAllAsync()).FirstOrDefault();
             List<TransactionAmount> transactionAmounts = new List<TransactionAmount>()
@@ -101,7 +105,9 @@ namespace FinBY.DBTests
                 new TransactionAmount(0, 1, 10.55m),
                 new TransactionAmount(0, 2, 20.3m)
             };
-            return new Transaction(transactionType.Id, 1, new DateTime(2022, 02, 11), "Gasto 00", "Gasto 0", transactionAmounts);
+            var transaction = new Transaction(transactionType.Id, 1, new DateTime(2022, 02, 11), "Gasto 00", "Gasto 0");
+            transaction.AddAmounts(transactionAmounts);
+            return transaction;
         }
     }
 }

@@ -24,7 +24,5 @@ namespace FinBY.Domain.Entities
             TransactionId = transactionId;
             UserId = userId;
         }
-
-        public TransactionAmount() { }
     }
 }

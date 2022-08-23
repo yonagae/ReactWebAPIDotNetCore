@@ -56,21 +56,22 @@ namespace FinBY.Infra.Repository
 
         public async Task<TEntity> GetByIdAsync(TKey id)
         {
-            return await _dataset.SingleOrDefaultAsync(p => p.Id.Equals(id));
+            return await _dataset.AsNoTracking().SingleOrDefaultAsync(p => p.Id.Equals(id));
         }
 
         public async Task<List<TEntity>> GetAllAsync()
         {
-            return await _dataset.ToListAsync();
-        }      
+            return await _dataset.AsNoTracking().ToListAsync();
+        }    
+        
         public async Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> expression)
         {
-            return await _dataset.Where(expression).ToListAsync();
+            return await _dataset.AsNoTracking().Where(expression).ToListAsync();
         }
 
         public PagedResult<TEntity> GetPaged(int page, int pageSize)
         {
-            return _dataset.GetPaged<TEntity>(page, pageSize);
+            return _dataset.AsNoTracking().GetPaged<TEntity>(page, pageSize);
         }
     }
 }

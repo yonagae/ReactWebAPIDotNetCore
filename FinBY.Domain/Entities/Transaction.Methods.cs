@@ -9,7 +9,7 @@ namespace FinBY.Domain.Entities
 {
     public partial class Transaction : Entity
     {
-        public bool AddTransactionAmount(TransactionAmount transactionAmount)
+        public bool AddAmount(TransactionAmount transactionAmount)
         {
             if (transactionAmount == null) return false;
 
@@ -18,6 +18,16 @@ namespace FinBY.Domain.Entities
 
             return true;
         }
+
+        public bool AddAmounts(IList<TransactionAmount> transactionAmounts)
+        {
+            if (transactionAmounts == null) return false;
+
+            foreach (var transactionAmount in transactionAmounts)
+                this.AddAmount(transactionAmount);
+
+            return true;
+        }               
 
         public bool RemoveTransactionAmount(TransactionAmount transactionAmount)
         {

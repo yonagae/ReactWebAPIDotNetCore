@@ -35,7 +35,7 @@ namespace FinBY.Tests.Handler
         {
             IUnitOfWork unitOfWork = new FakeUnitOfWork();
             DeleteTransactionHandler handler = new DeleteTransactionHandler(unitOfWork);
-            unitOfWork.TransactionRepository.GetByIdAsync(TRANSACTION_ID).Returns<Transaction>(new Transaction());
+            unitOfWork.TransactionRepository.GetByIdAsync(TRANSACTION_ID).Returns<Transaction>(new Transaction(1, 1, new DateTime(), "Descrition", "ShortDescription"));
 
             var result = handler.Handle(new DeleteTransactionCommand(TRANSACTION_ID), new System.Threading.CancellationToken());
 

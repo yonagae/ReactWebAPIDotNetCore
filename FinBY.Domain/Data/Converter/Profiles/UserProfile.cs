@@ -9,13 +9,14 @@ namespace FinBY.Domain.Data.Converter.Profiles
         public UserProfile()
         {
             CreateMap<User, UserDTO>();
+            CreateMap<UserDTO, User>();
 
-        //     .ForMember(dest =>
-        //    dest.FName,
-        //    opt => opt.MapFrom(src => src.FirstName))
-        //.ForMember(dest =>
-        //    dest.LName,
-        //    opt => opt.MapFrom(src => src.LastName))
+            //     .ForMember(dest =>
+            //    dest.FName,
+            //    opt => opt.MapFrom(src => src.FirstName))
+            //.ForMember(dest =>
+            //    dest.LName,
+            //    opt => opt.MapFrom(src => src.LastName))
         }
     }
 }

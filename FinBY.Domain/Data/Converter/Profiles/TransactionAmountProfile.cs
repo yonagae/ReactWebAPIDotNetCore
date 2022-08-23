@@ -12,9 +12,9 @@ namespace FinBY.Domain.Data.Converter.Profiles
         public TransactionAmountProfile()
         {
             CreateMap<TransactionAmount, TransactionAmountDTO>();
-            CreateMap<TransactionAmount, NewTransactionAmountDTO>();
-            CreateMap<NewTransactionAmountDTO, TransactionAmount>();
+            //CreateMap<TransactionAmount, NewTransactionAmountDTO>();
             CreateMap<TransactionAmountDTO, TransactionAmount>();
+            CreateMap<NewTransactionAmountDTO, TransactionAmount>();
         }
     }
 }

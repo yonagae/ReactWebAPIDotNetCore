@@ -17,7 +17,5 @@ namespace FinBY.Domain.Entities
         {
             Name = name;
         }
-
-        public TransactionType() { }
     }
 }

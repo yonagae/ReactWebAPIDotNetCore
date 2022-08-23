@@ -30,7 +30,7 @@ namespace FinBY.Domain.Handler
                 var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(request.TransactionAmount.TransactionId);
 
                 transaction.RemoveTransactionAmount(oldTransactionAmount);
-                transaction.AddTransactionAmount(request.TransactionAmount);
+                transaction.AddAmount(request.TransactionAmount);
 
                 _unitOfWork.TransactionAmountRepository.Update(request.TransactionAmount);
                 _unitOfWork.TransactionRepository.Update(transaction);

@@ -21,7 +21,8 @@ namespace FinBY.Tests.Handler
             IUnitOfWork unitOfWork = new FakeUnitOfWork();
             UpdateTransactionHandler handler = new UpdateTransactionHandler(unitOfWork);    
             var transactionAmounts = new List<TransactionAmount>() { new TransactionAmount(0, 1, 10) };
-            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", transactionAmounts);
+            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente");
+            transaction.AddAmounts(transactionAmounts);
             unitOfWork.TransactionRepository.GetByIdAsync(transaction.Id).Returns<Transaction>(transaction);
 
             var result = handler.Handle(new UpdateTransactionCommand(transaction), new System.Threading.CancellationToken());
@@ -37,7 +38,8 @@ namespace FinBY.Tests.Handler
             IUnitOfWork unitOfWork = new FakeUnitOfWork();
             UpdateTransactionHandler handler = new UpdateTransactionHandler(unitOfWork);
             var transactionAmounts = new List<TransactionAmount>() { new TransactionAmount(0, 1, 10) };
-            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", transactionAmounts);
+            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente");
+            transaction.AddAmounts(transactionAmounts);
 
 
             var result = handler.Handle(new UpdateTransactionCommand(transaction), new System.Threading.CancellationToken());
@@ -53,7 +55,7 @@ namespace FinBY.Tests.Handler
             IUnitOfWork unitOfWork = new FakeUnitOfWork();
             UpdateTransactionHandler handler = new UpdateTransactionHandler(unitOfWork);
             User user = new User("Jonh Main");
-            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente", null);
+            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente");
 
             var result = handler.Handle(new UpdateTransactionCommand(transaction), new System.Threading.CancellationToken());
 

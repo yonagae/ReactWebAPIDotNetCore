@@ -13,7 +13,7 @@ namespace FinBY.Domain.Data.DTO
         public string Description { get; set; }
         public string ShortDescription { get; set; }
         public int UserId { get; set; }
-        public ICollection<NewTransactionAmountDTO> TransactionAmounts { get; set; }
+        public ICollection<TransactionAmountDTO> TransactionAmounts { get; set; }
 
         [Range(0, 999999.99)]
         public Decimal TotalAmount { get; set; }

@@ -27,7 +27,7 @@ namespace FinBY.Domain.Handler
             if (validationResult.isValid)
             {
                 var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(request.TransactionAmount.TransactionId);
-                transaction.AddTransactionAmount(request.TransactionAmount);
+                transaction.AddAmount(request.TransactionAmount);
 
                 _unitOfWork.TransactionAmountRepository.Add(request.TransactionAmount);
                 _unitOfWork.TransactionRepository.Update(transaction);

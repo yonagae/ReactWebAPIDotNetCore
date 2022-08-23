@@ -33,13 +33,15 @@ namespace FinBY.DBTests
                         new TransactionAmount(0, 1, 1.0m),
                         new TransactionAmount(0, 2, 2.0m)
                     };
-                transactions.Add(new Transaction(
+                var transaction = new Transaction(
                     (i % 3) + 1
                     , (i % 2) + 1
                     , new DateTime(2022, 01, 01).AddDays(i)
                     , $"Gasto número {i}"
                     , $"Gasto {i}"
-                    , transactionAmounts));
+                    );
+                transaction.AddAmounts(transactionAmounts);
+                transactions.Add(transaction);
             }
 
             TestDatabaseFixture.Instance.AddRange(transactions);
@@ -53,10 +55,15 @@ namespace FinBY.DBTests
             TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[Transaction] where 1 = 1");
         }
 
+        private IUnitOfWork _unitOfWork;
+        public GetAllWithDetailsAsPagedResultAsyncTest()
+        {
+            _unitOfWork = new UnitOfWork(TestDatabaseFixture.Instance);
+        }
+
         [TestMethod]
         public async Task GetAllWithDetailsAsPagedResultAsync_FilterByDate_ReturnTransactionBetweenTheDates()
         {
-            IUnitOfWork unitOfWork = new UnitOfWork(TestDatabaseFixture.Instance);
             var tParams = new PagedTransactionParams()
             {
                 PageSize = 50,
@@ -64,7 +71,7 @@ namespace FinBY.DBTests
                 DataBegin = new DateTime(2022, 02, 01),
                 DataEnd = new DateTime(2022, 02, 28),
             };
-            var result = await unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(tParams);
+            var result = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(tParams);
             result.Results.Count.Should().Be(28);
             result.Results.Should().OnlyContain(x => x.Date >= new DateTime(2022, 02, 01));
             result.Results.Should().OnlyContain(x => x.Date <= new DateTime(2022, 02, 28));
@@ -73,7 +80,6 @@ namespace FinBY.DBTests
         [TestMethod]
         public async Task GetAllWithDetailsAsPagedResultAsync_FilterByDateWithA10PageSize_Return10TransactionBetweenTheDates()
         {
-            IUnitOfWork unitOfWork = new UnitOfWork(TestDatabaseFixture.Instance);
             var tParams = new PagedTransactionParams()
             {
                 PageSize = 10,
@@ -81,7 +87,7 @@ namespace FinBY.DBTests
                 DataBegin = new DateTime(2022, 02, 01),
                 DataEnd = new DateTime(2022, 02, 28),
             };
-            var result = await unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(tParams);
+            var result = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(tParams);
             result.Results.Count.Should().Be(10);
             result.Results.Should().OnlyContain(x => x.Date >= new DateTime(2022, 02, 01));
             result.Results.Should().OnlyContain(x => x.Date <= new DateTime(2022, 02, 28));
@@ -90,13 +96,12 @@ namespace FinBY.DBTests
         [TestMethod]
         public async Task GetAllWithDetailsAsPagedResultAsync_PageNumber2_ReturnTransactionFromPage2()
         {
-            IUnitOfWork unitOfWork = new UnitOfWork(TestDatabaseFixture.Instance);
-            var tParams = new PagedTransactionParams()
+             var tParams = new PagedTransactionParams()
             {
                 PageSize = 10,
                 PageNumber = 2,
             };
-            var result = await unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(tParams);
+            var result = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(tParams);
 
             result.Results.Count.Should().Be(10);
             result.Results.Should().OnlyContain(x => x.Date > new DateTime(2022, 01, 11));
@@ -106,14 +111,13 @@ namespace FinBY.DBTests
         [TestMethod]
         public async Task GetAllWithDetailsAsPagedResultAsync_FilterByUserId_ReturnTransactionCreatedOnlyByTheUserId()
         {
-            IUnitOfWork unitOfWork = new UnitOfWork(TestDatabaseFixture.Instance);
             var tParams = new PagedTransactionParams()
             {
                 PageSize = 100,
                 PageNumber = 1,
                 UserId = 1
             };
-            var result = await unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(tParams);
+            var result = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(tParams);
             result.Results.Count.Should().Be(50);
             result.Results.Should().OnlyContain(x => x.UserId == 1);
         }
@@ -121,14 +125,13 @@ namespace FinBY.DBTests
         [TestMethod]
         public async Task GetAllWithDetailsAsPagedResultAsync_FilterByTransactionType_ReturnTransactionFilteredByTheTransactionType()
         {
-            IUnitOfWork unitOfWork = new UnitOfWork(TestDatabaseFixture.Instance);
             var tParams = new PagedTransactionParams()
             {
                 PageSize = 50,
                 PageNumber = 1,
                 TransactionType = 2
             };
-            var result = await unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(tParams);
+            var result = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(tParams);
             result.Results.Count.Should().Be(34);
             result.Results.Should().OnlyContain(x => x.TransactionType.Id == 2);
         }
