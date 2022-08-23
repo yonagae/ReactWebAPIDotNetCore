@@ -31,8 +31,7 @@ namespace FinBY.Domain.Handler
                 if (result == null) 
                     return new GenericChangeCommandResult(false, new List<string>() { "Transaction not found" }, result, true);
 
-                _unitOfWork.TransactionRepository.Update(request.Transaction);
-                await _unitOfWork.SaveAsync();               
+                await _unitOfWork.TransactionRepository.UpdateTransactionWithAmounts(request.Transaction);           
 
                 return new GenericChangeCommandResult(true, null, request.Transaction);
             }

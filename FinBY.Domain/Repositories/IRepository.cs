@@ -14,10 +14,10 @@ namespace FinBY.Domain.Repositories
         void Update(TEntity obj);
         void Remove(TKey id);
         int SaveChanges();
-        Task SaveChangesAsync();
+        Task<int> SaveChangesAsync();
         Task<TEntity> GetByIdAsync(TKey id);
         Task<List<TEntity>> GetAllAsync();
         Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> expression);
-        PagedResult<TEntity> GetPaged(int page,  int pageSize);
+        Task<PagedResult<TEntity>> GetPagedAsync(int page,  int pageSize);
     }
 }

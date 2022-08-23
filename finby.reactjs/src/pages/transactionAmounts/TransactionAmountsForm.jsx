@@ -3,17 +3,26 @@ import { Alert } from 'react-bootstrap';
 import api from '../../api/transaction';
 
 export default function TransactionAmountsForm(props) {
-    const [formFields, setFormFields] = useState(props.transaction.transactionAmounts)
+    const [formFields, setFormFields] = useState(null)
     const [users, setUsers] = useState([]);
 
-    useEffect(() => {
-        getAllUsers().then(result => setUsers(result));
-    }, []);
+    async function getAllTransactionAmounts() {
+        const response = await api.get(`transactions/${props.transaction.id}/TransactionAmounts`);
+        setFormFields( response.data );
+    }
 
     async function getAllUsers() {
         const response = await api.get('users');
         return response.data;
     };
+
+    useEffect(() => {
+        getAllUsers().then(result => setUsers(result));
+    }, []);
+
+    useEffect(() => {
+        getAllTransactionAmounts();
+    }, []);
 
     const handleFormChange = (event, index) => {
         let data = [...formFields];
@@ -53,7 +62,7 @@ export default function TransactionAmountsForm(props) {
         props.transaction.transactionAmounts = formFields;
     }
 
-
+    if (formFields == null) return "Loading";
     return (
         <div className="TransactionAmountsForm" >
 

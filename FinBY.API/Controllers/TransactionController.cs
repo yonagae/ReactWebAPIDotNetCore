@@ -33,11 +33,13 @@ namespace FinBY.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(List<TransactionDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTransactions()
         {
             try
             { 
-                var transactions = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsListAsync();
+                var transactions = await _unitOfWork.TransactionRepository.GetAllDetailedWithouAmountsAsync();
                 var tsDTOs = _mapper.Map<List<TransactionDTO>>(transactions);
                 return Ok(tsDTOs);
             }

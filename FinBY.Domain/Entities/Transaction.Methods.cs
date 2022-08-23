@@ -39,5 +39,11 @@ namespace FinBY.Domain.Entities
 
             return true;
         }
+
+        public void ClearAmounts()
+        {
+            _transactionAmounts.Clear();
+            TotalAmount = 0;
+        }
     }
 }

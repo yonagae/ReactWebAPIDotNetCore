@@ -18,14 +18,22 @@ namespace FinBY.Infra.Repository
         {
         }
 
-        public Task<List<Transaction>> GetAllWithDetailsAsListAsync()
+        public async Task<List<Transaction>> GetAllDetailedWithouAmountsAsync()
         {
-            return _dataset.AsNoTracking()
+            return await _dataset.AsNoTracking()
+                .Include("TransactionType")
+                .Include("User")
+                .ToListAsync();
+        }
+
+        public async Task<List<Transaction>> GetAllWithDetailsAsListAsync()
+        {
+            return await _dataset.AsNoTracking()
                 .Include("TransactionType")
                 .Include("TransactionAmounts")
                 .Include("User")
                 .ToListAsync();
-        }
+        }        
 
         public async Task<PagedResult<Transaction>> GetAllWithDetailsAsPagedResultAsync(PagedTransactionParams transactionParams)
         {
@@ -49,6 +57,53 @@ namespace FinBY.Infra.Repository
                 query = query.Where(trans => trans.Date <= transactionParams.DataEnd);          
 
             return await query.GetPagedAsync(transactionParams.PageNumber, transactionParams.PageSize);
+        }
+
+        public async Task<int> UpdateTransactionWithAmounts(Transaction transaction)
+        {
+            var transactionDB = _dataset.
+              Where( x => x.Id == transaction.Id)
+             .Include("TransactionType")
+             .Include("TransactionAmounts")
+             .Include("User")
+             .FirstOrDefault();
+
+            transactionDB.ClearAmounts();
+            foreach (var t in transaction.TransactionAmounts)
+                transactionDB.AddAmount(t);
+
+            _context.Entry(transactionDB).State = EntityState.Modified;
+
+            return await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transactionID"></param>
+        /// <returns></returns>
+        public async Task<bool> DeleteCascadeToAmounts(Transaction transaction)
+        {
+            //Exemple when we want to execute pure SQL to be quicker and a begin and commit transaction to commit everything at once
+            await _context.Database.BeginTransactionAsync();
+
+            await _context.Database.ExecuteSqlInterpolatedAsync(
+                $"DELETE from dbo.[TransactionAmount] where [TransactionId] = {transaction.Id}");
+            await _context.SaveChangesAsync();
+
+            await _context.Database.CommitTransactionAsync();
+            return true;
+
+        }
+
+        public async Task<Transaction> GetDetailedByIdAsync(int id)
+        {
+            return await _dataset.AsNoTracking()
+                .Where( x => x.Id == id)
+                .Include("TransactionType")
+                .Include("TransactionAmounts")
+                .Include("User")
+                .FirstOrDefaultAsync();
         }
     }
 }

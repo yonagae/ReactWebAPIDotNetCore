@@ -51,8 +51,8 @@ namespace FinBY.DBTests
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[TransactionAmount] where 1 = 1");
-            TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[Transaction] where 1 = 1");
+            //TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[TransactionAmount] where 1 = 1");
+            //TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[Transaction] where 1 = 1");
         }
 
         private IUnitOfWork _unitOfWork;

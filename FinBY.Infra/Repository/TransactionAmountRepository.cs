@@ -15,10 +15,11 @@ namespace FinBY.Infra.Repository
            : base(context)
         {
         }
+     
 
-        public async Task<List<TransactionAmount>> GetTransactionAmountsByTransactionIdAsync(int transactionID)
+        public  Task<List<TransactionAmount>> GetTransactionAmountsByTransactionIdAsync(int transactionID)
         {
-            return await _dataset.AsNoTracking().Where(TransactionAmountQueries.GetByTransactionId(transactionID)).ToListAsync();
+            return _dataset.AsNoTracking().Where(TransactionAmountQueries.GetByTransactionId(transactionID)).ToListAsync();
         }
     }
 }

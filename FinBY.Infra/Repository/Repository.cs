@@ -43,9 +43,9 @@ namespace FinBY.Infra.Repository
             return _context.SaveChanges();
         }
 
-        public Task SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            return _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
 
         public void Dispose()
@@ -69,9 +69,9 @@ namespace FinBY.Infra.Repository
             return await _dataset.AsNoTracking().Where(expression).ToListAsync();
         }
 
-        public PagedResult<TEntity> GetPaged(int page, int pageSize)
+        public async Task<PagedResult<TEntity>> GetPagedAsync(int page, int pageSize)
         {
-            return _dataset.AsNoTracking().GetPaged<TEntity>(page, pageSize);
-        }
+            return await _dataset.AsNoTracking().GetPagedAsync<TEntity>(page, pageSize);
+        }   
     }
 }

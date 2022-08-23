@@ -22,9 +22,11 @@ namespace FinBY.Domain.Handler
 
             if (validationResult.isValid)
             {
-                _unitOfWork.TransactionRepository.Add(request.Transaction);
-                 await _unitOfWork.SaveAsync();
-                return new GenericChangeCommandResult(true, null, request.Transaction);
+                _unitOfWork.TransactionRepository.Add(request.Transaction);                
+                await _unitOfWork.SaveAsync();
+
+                var saveTransaction = await _unitOfWork.TransactionRepository.GetDetailedByIdAsync(request.Transaction.Id);
+                return new GenericChangeCommandResult(true, null, saveTransaction);
             }
             else
             {
