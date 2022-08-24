@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import TransactionForm from './TransactionForm';
 import TransactionLista from './TransactionLista';
+import TransactionPieChart from './TransactionPieChart'
 import api from '../../api/transaction';
 import TitlePage from '../../components/TitlePage';
 
@@ -92,6 +93,10 @@ export default function Transaction() {
                     <i className='fas fa-plus'></i>
                 </Button>
             </TitlePage>
+
+            <TransactionPieChart
+                transactions={transactions}
+            />
 
             <TransactionLista
                 transactions={transactions}

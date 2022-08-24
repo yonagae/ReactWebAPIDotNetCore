@@ -8,6 +8,7 @@ export default function TransactionAmountsForm(props) {
 
     async function getAllTransactionAmounts() {
         const response = await api.get(`transactions/${props.transaction.id}/TransactionAmounts`);
+        props.transaction.transactionAmounts = response.data;
         setFormFields( response.data );
     }
 

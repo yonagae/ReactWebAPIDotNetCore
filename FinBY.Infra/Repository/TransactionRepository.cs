@@ -2,7 +2,6 @@
 using FinBY.Domain.Data.PagedResult;
 using FinBY.Domain.Entities;
 using FinBY.Domain.Repositories;
-using FinBY.Infra.Context;
 using FinBY.Infra.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -61,6 +60,14 @@ namespace FinBY.Infra.Repository
 
         public async Task<int> UpdateTransactionWithAmounts(Transaction transaction)
         {
+            //update the transaction data on the database, on this part the amounts wont be updated
+            _context.Update(transaction);
+            await _context.SaveChangesAsync();
+
+            //remove the tracker so the ClearAmounts called below don't affect the transaction object
+            _context.Entry(transaction).State = EntityState.Detached;
+
+            //get the transaction with the tracker to update            
             var transactionDB = _dataset.
               Where( x => x.Id == transaction.Id)
              .Include("TransactionType")
@@ -74,14 +81,11 @@ namespace FinBY.Infra.Repository
 
             _context.Entry(transactionDB).State = EntityState.Modified;
 
+            transaction = transactionDB;
+
             return await _context.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="transactionID"></param>
-        /// <returns></returns>
         public async Task<bool> DeleteCascadeToAmounts(Transaction transaction)
         {
             //Exemple when we want to execute pure SQL to be quicker and a begin and commit transaction to commit everything at once

@@ -7,6 +7,7 @@ const initialTransaction = {
     id: 0,
     date: new Date(),
     transactionTypeId: 0,
+    transactionType: {},
     userId: 1,
     description: '',
     shortDescription: '',
@@ -17,7 +18,6 @@ const initialTransaction = {
 export default function TransactionForm(props) {
     const [transaction, setTransaction] = useState(transactionAtual());
     const [transactionTypes, setTransactionTypes] = useState([]);
-
     const [startDate, setStartDate] = useState(new Date());
 
     useEffect(() => {
@@ -26,13 +26,20 @@ export default function TransactionForm(props) {
 
     useEffect(() => {
         getTransactionTypes().then(result => setTransactionTypes(result));
-    }, []);
-    
+    }, []);    
 
     const inputTextHandler = (e) => {
         const { name, value } = e.target;
 
         setTransaction({ ...transaction, [name]: value });
+    };
+
+    const inputSelectHandler = (e) => {
+        const { name, value } = e.target;
+        var tp = transactionTypes.filter(obj => {
+            return obj.id == value
+        })
+        setTransaction({ ...transaction, [name]: value, transactionType: tp[0]});
     };
 
     const updateTotalAmount = () => {
@@ -96,7 +103,7 @@ export default function TransactionForm(props) {
                     <select
                         name='transactionTypeId'
                         value={transaction.transactionTypeId}
-                        onChange={inputTextHandler}
+                        onChange={inputSelectHandler}
                         id='transactionTypeId'
                         className='form-select'
                     >

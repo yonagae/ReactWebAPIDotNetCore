@@ -11,7 +11,8 @@ using FinBY.API.Helper;
 
 namespace FinBY.API.Controllers
 {
-    [Route("api/transactions")]
+    [ApiVersion("1")]
+    [Route("api/v{version:apiVersion}/transactions")]
     [ApiController]
     public class TransactionController : ControllerBase
     {

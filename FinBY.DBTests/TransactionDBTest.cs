@@ -19,8 +19,8 @@ namespace FinBY.DBTests
         [TestCleanup]
         public void CleanTables()
         {
-            TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[TransactionAmount] where 1 = 1");
-            TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[Transaction] where 1 = 1");   
+            //TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[TransactionAmount] where 1 = 1");
+            //TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[Transaction] where 1 = 1");   
         }
 
         private IUnitOfWork _unitOfWork;
@@ -37,19 +37,18 @@ namespace FinBY.DBTests
             CreateTransactionHandler createTransactionHandler = new CreateTransactionHandler(_unitOfWork);
             await createTransactionHandler.Handle(new CreateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
-            var transactionList = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsListAsync();
-            transactionList.Count.Should().Be(1);
-            transactionList[0].Id.Should().BeGreaterThan(0);
-            transactionList[0].TotalAmount.Should().Be(30.85m);
-            transactionList[0].Description.Should().Be("Gasto 00");
-            transactionList[0].ShortDescription.Should().Be("Gasto 0");
-            transactionList[0].Date.Year.Should().Be(2022);
-            transactionList[0].Date.Month.Should().Be(02);
-            transactionList[0].Date.Day.Should().Be(11);
-            transactionList[0].TransactionAmounts.Count.Should().Be(2);
-            transactionList[0].TransactionAmounts.Should().OnlyContain(x => x.TransactionId == transactionList[0].Id);
-            transactionList[0].TransactionAmounts.Should().Contain(x => x.UserId == 1 && x.Amount == 10.55m);
-            transactionList[0].TransactionAmounts.Should().Contain(x => x.UserId == 2 && x.Amount == 20.3m);
+            var createdTransaction = await _unitOfWork.TransactionRepository.GetDetailedByIdAsync(transaction.Id);
+            createdTransaction.Id.Should().BeGreaterThan(0);
+            createdTransaction.TotalAmount.Should().Be(30.85m);
+            createdTransaction.Description.Should().Be("Gasto 00");
+            createdTransaction.ShortDescription.Should().Be("Gasto 0");
+            createdTransaction.Date.Year.Should().Be(2022);
+            createdTransaction.Date.Month.Should().Be(02);
+            createdTransaction.Date.Day.Should().Be(11);
+            createdTransaction.TransactionAmounts.Count.Should().Be(2);
+            createdTransaction.TransactionAmounts.Should().OnlyContain(x => x.TransactionId == createdTransaction.Id);
+            createdTransaction.TransactionAmounts.Should().Contain(x => x.UserId == 1 && x.Amount == 10.55m);
+            createdTransaction.TransactionAmounts.Should().Contain(x => x.UserId == 2 && x.Amount == 20.3m);
         }
 
         [TestMethod]
@@ -63,20 +62,17 @@ namespace FinBY.DBTests
             UpdateTransactionHandler updateTransactionHandler = new UpdateTransactionHandler(_unitOfWork);
             await updateTransactionHandler.Handle(new UpdateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
-            var transactionList = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsListAsync();
-            transactionList.Count.Should().Be(1);
-            transactionList[0].Id.Should().BeGreaterThan(0);
-            transactionList[0].TotalAmount.Should().Be(41.96m);
-            transactionList[0].Description.Should().Be("Gasto 00");
-            transactionList[0].ShortDescription.Should().Be("Gasto 0");
-            transactionList[0].Date.Year.Should().Be(2022);
-            transactionList[0].Date.Month.Should().Be(02);
-            transactionList[0].Date.Day.Should().Be(11);
-            transactionList[0].TransactionAmounts.Count.Should().Be(3);
-            transactionList[0].TransactionAmounts.Should().OnlyContain(x => x.TransactionId == transactionList[0].Id);
-            transactionList[0].TransactionAmounts.Should().Contain(x => x.UserId == 1 && x.Amount == 10.55m);
-            transactionList[0].TransactionAmounts.Should().Contain(x => x.UserId == 2 && x.Amount == 20.3m);
-            transactionList[0].TransactionAmounts.Should().Contain(x => x.UserId == 1 && x.Amount == 11.11m);
+            var createdTransaction = await _unitOfWork.TransactionRepository.GetDetailedByIdAsync(transaction.Id);
+            createdTransaction.Id.Should().BeGreaterThan(0);
+            createdTransaction.TotalAmount.Should().Be(41.96m);
+            createdTransaction.Description.Should().Be("Gasto 00");
+            createdTransaction.ShortDescription.Should().Be("Gasto 0");
+            createdTransaction.Date.Year.Should().Be(2022);
+            createdTransaction.Date.Month.Should().Be(02);
+            createdTransaction.Date.Day.Should().Be(11);
+            createdTransaction.TransactionAmounts.Count.Should().Be(3);
+            createdTransaction.TransactionAmounts.Should().OnlyContain(x => x.TransactionId == createdTransaction.Id);
+            createdTransaction.TransactionAmounts.Should().Contain(x => x.UserId == 1 && x.Amount == 11.11m);
         }
 
 
@@ -90,10 +86,8 @@ namespace FinBY.DBTests
             DeleteTransactionHandler deleteTransaction = new DeleteTransactionHandler(_unitOfWork);
             var result = await deleteTransaction.Handle(new DeleteTransactionCommand(((Transaction)resultTra.Data).Id), new System.Threading.CancellationToken());
 
-            var transactionList = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsListAsync();
-            transactionList.Count.Should().Be(0);
-            (await _unitOfWork.TransactionRepository.GetAllAsync()).Count.Should().Be(0);
-            (await _unitOfWork.TransactionAmountRepository.GetAllAsync()).Count.Should().Be(0);
+            var createdTransaction = await _unitOfWork.TransactionRepository.GetDetailedByIdAsync(((Transaction)resultTra.Data).Id);
+            createdTransaction.Should().Be(null);
         }
 
 

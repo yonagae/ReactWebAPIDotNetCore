@@ -14,3 +14,5 @@ import "bootswatch/dist/[theme]/bootstrap.min.css";
 // TODO: Note: Replace ^[theme]^ (examples: darkly, slate, cosmo, spacelab, and superhero. See https://bootswatch.com/ for current theme names.)
 
 npm install react-datepicker --save
+
+npm install recharts

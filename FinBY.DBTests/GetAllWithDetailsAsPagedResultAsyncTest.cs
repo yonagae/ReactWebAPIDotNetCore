@@ -19,8 +19,8 @@ namespace FinBY.DBTests
         [ClassInitialize]
         public static async Task ClassSetup(TestContext context)
         {
-            TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[TransactionAmount] where 1 = 1");
-            TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[Transaction] where 1 = 1");
+            //TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[TransactionAmount] where 1 = 1");
+            //TestDatabaseFixture.Instance.Database.ExecuteSqlRaw("delete from dbo.[Transaction] where 1 = 1");
 
             IUnitOfWork unitOfWork = new UnitOfWork(TestDatabaseFixture.Instance);
             var transactionType = (await unitOfWork.TransactionTypeRepository.GetAllAsync()).FirstOrDefault();

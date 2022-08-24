@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using FinBY.Domain.Repositories;
 using FinBY.Infra.Context;
 using FinBY.Infra.Repository;
-using Microsoft.Extensions.Configuration;
 using System.Reflection;
 using MediatR;
 using FinBY.Domain;
@@ -10,8 +9,6 @@ using FinBY.Domain.Contracts;
 using FinBY.Infra.Services;
 using NLog;
 using FinBY.LoggerService;
-using FinBY.API;
-using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +27,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 //configure the automapper to allow DTO to be easily converted 
 DTOAutoMapper.ConfigureAutoMapperServices(builder.Services);
+
+//versioning the API
+builder.Services.AddApiVersioning();
 
 builder.Services.AddScoped<DbContext, ApplicationDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

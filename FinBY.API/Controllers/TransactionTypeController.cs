@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FinBY.API.Controllers
 {
-    [Route("api/transactionTypes")]
+    [ApiVersion("1")]
+    [Route("api/v{version:apiVersion}/transactionTypes")]
     [ApiController]
     public class TransactionTypeController : ControllerBase
     {
