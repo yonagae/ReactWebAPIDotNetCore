@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import TransactionForm from './TransactionForm';
 import TransactionLista from './TransactionLista';
-import TransactionPieChart from './TransactionPieChart'
+import CustomLabelPieChart from '../../components/CustomLabelPieChart'
 import api from '../../api/transaction';
 import TitlePage from '../../components/TitlePage';
 
@@ -84,6 +84,25 @@ export default function Transaction() {
         handleAtiviadeModal();
     };
 
+    const fillPieData = () => {
+        let pieChartData = [];
+        const transactionTypeNames = transactions.map(item => item.transactionType.name)
+            .filter((value, index, self) => self.indexOf(value) === index);
+
+        transactionTypeNames.forEach(element => {
+            const sum = transactions.reduce((accumulator, object) => {
+                if (object.transactionType.name == element)
+                    return accumulator + object.totalAmount;
+                else
+                    return accumulator;
+            }, 0);
+            pieChartData.push({ name: element, value: sum });
+        });
+
+
+        return  pieChartData ;
+    }
+
     return (
         <>
             <TitlePage
@@ -94,8 +113,8 @@ export default function Transaction() {
                 </Button>
             </TitlePage>
 
-            <TransactionPieChart
-                transactions={transactions}
+            <CustomLabelPieChart
+                fillPieData={fillPieData}
             />
 
             <TransactionLista

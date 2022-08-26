@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinBY.Domain.Data.DTO
+namespace FinBY.Domain.Data.DTO;
+
+public class NewTransactionAmountDTO
 {
-    public class NewTransactionAmountDTO
-    {
-        public int TransactionID { get; set; }
-        [Range(0, 999999.99)]
-        public decimal Amount { get;  set; }
-        public int UserId { get;  set; }
-    }
+    public int TransactionID { get; set; }
+    [Range(0, 999999.99)]
+    public decimal Amount { get;  set; }
+    public int UserId { get;  set; }
 }

@@ -3,6 +3,7 @@ using FinBY.Domain.Contracts;
 using FinBY.Domain.Data.DTO;
 using FinBY.Domain.Repositories;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,24 +14,28 @@ namespace FinBY.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ILoggerManager _logger;
+        private ILoggerManager _logger;
         private IUnitOfWork _unitOfWork;
-        private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
+        private IMediator _mediator;
+        private IMapper _mapper;
+        private ILoginService _loginService;
 
         public UserController(
             IMapper mapper,
             IMediator mediator,
             ILoggerManager logger,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ILoginService loginService)
         {
             _mapper = mapper;
             _mediator = mediator;
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _loginService = loginService; ;
         }
 
         [HttpGet]
+        [Authorize("Bearer")]
         public async Task<IActionResult> GetAllUsers()
         {
             try
@@ -44,6 +49,43 @@ namespace FinBY.API.Controllers
                 _logger.LogError($"Something went wrong inside the User get action: {ex}");
                 return StatusCode(500, "Internal server error");
             }
+        }
+
+        [HttpPost]
+        [Route("signin")]
+        public IActionResult SignIn([FromBody] UserLoginDTO user)
+        {
+            if (user == null) return BadRequest("Ivalid client request");
+
+            var token = _loginService.ValidateCredentials(user);
+
+            if (token == null) return Unauthorized();
+            return Ok(token);
+        }
+
+        [HttpPost]
+        [Route("refresh")]
+        public IActionResult Refresh([FromBody] TokenDTO tokenVo)
+        {
+            if (tokenVo is null) return BadRequest("Ivalid client request");
+
+            var token = _loginService.ValidateCredentials(tokenVo);
+
+            if (token == null) return BadRequest("Ivalid client request");
+            return Ok(token);
+        }
+
+
+        [HttpGet]
+        [Route("revoke")]
+        //[Authorize("Bearer")]
+        public IActionResult Revoke()
+        {
+            var username = User.Identity.Name;
+            var result = _loginService.RevokeToken(username);
+
+            if (!result) return BadRequest("Ivalid client request");
+            return NoContent();
         }
     }
 }

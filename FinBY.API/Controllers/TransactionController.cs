@@ -174,5 +174,22 @@ namespace FinBY.API.Controllers
             }
         }
 
+        [HttpGet("dashboard")]
+        [ProducesResponseType(typeof(List<TransactionDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetDashboardInfo()
+        {
+            try
+            {
+                var transactions = await _unitOfWork.TransactionRepository.GetSumOfTransactionsByType(new DateTime(2022,02,01), new DateTime(2022, 02, 28));
+                return Ok(transactions);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside the Transaction get action: {ex}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
     }
 }

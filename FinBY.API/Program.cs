@@ -9,6 +9,15 @@ using FinBY.Domain.Contracts;
 using FinBY.Infra.Services;
 using NLog;
 using FinBY.LoggerService;
+using FinBY.API;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using FinBY.Domain.Configurations;
+using Microsoft.Extensions.Options;
+using System.Configuration;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +27,32 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options => {
+builder.Services.AddSwaggerGen(options =>
+{
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id=JwtBearerDefaults.AuthenticationScheme
+                }
+            },
+            new string[]{}
+        }
+    });
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -38,11 +71,15 @@ builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionTypeRepository, TransactionTypeRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailService, QueueEmailService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 //configure the MediatR by mapping all the RequestHandler from the assembly  from DomainMediatrEntryPoint
 builder.Services.AddMediatR(typeof(DomainMediatrEntryPoint));
 
 builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
+
+AuthenticationStartUp.ConfigureAuthentication(builder);
 
 //services cors to allow any url to access the api
 builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
@@ -51,6 +88,12 @@ builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
 }));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    DBStartUp.StartupBase(dbContext);
+}
 
 app.UseCors("corsapp");
 
@@ -63,6 +106,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 
-app.MapControllers();
+if (app.Environment.IsDevelopment())
+    app.MapControllers().AllowAnonymous();
+else
+    app.MapControllers();
 
 app.Run();
+

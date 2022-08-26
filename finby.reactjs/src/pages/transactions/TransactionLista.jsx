@@ -17,10 +17,10 @@ export default function TransactionLista(props) {
                 </thead>
                 <tbody>
 
-                    {props.transactions.map((ativ) => (
+                    {props.transactions.map((transaction) => (
                         <TransactionItem
-                            key={ativ.id}
-                            ativ={ativ}
+                            key={transaction.id}
+                            transaction={transaction}
                             pegarTransaction={props.pegarTransaction}
                             handleConfirmModal={props.handleConfirmModal}
                         />

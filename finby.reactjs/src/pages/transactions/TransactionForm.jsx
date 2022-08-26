@@ -21,7 +21,10 @@ export default function TransactionForm(props) {
     const [startDate, setStartDate] = useState(new Date());
 
     useEffect(() => {
-        if (props.ativSelecionada.id !== 0) setTransaction(props.ativSelecionada);
+        if (props.ativSelecionada.id !== 0) {
+            setTransaction(props.ativSelecionada);
+            setStartDate(new Date(transaction.date));
+        }
     }, [props.ativSelecionada]);
 
     useEffect(() => {

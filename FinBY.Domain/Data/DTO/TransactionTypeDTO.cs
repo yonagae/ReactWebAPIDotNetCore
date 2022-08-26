@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinBY.Domain.Data.DTO
+namespace FinBY.Domain.Data.DTO;
+
+public  class TransactionTypeDTO : NewTransactionTypeDTO
 {
-    public  class TransactionTypeDTO : NewTransactionTypeDTO
-    {
-        [Required]
-        public int Id { get;  set; }
-    }
+    [Required]
+    public int Id { get;  set; }
 }
