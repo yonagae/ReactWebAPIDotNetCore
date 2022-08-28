@@ -6,6 +6,7 @@ using FinBY.Infra.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,17 +21,17 @@ namespace FinBY.Infra.Repository
 
         public async Task<List<Transaction>> GetAllDetailedWithouAmountsAsync()
         {
-            return await _dataset.AsNoTracking()
+             return await _dataset.AsNoTracking()
                 .Include(x => x.TransactionType)
                 .Include(x => x.User)
-                .ToListAsync();
+                .ToListAsync(); ;
         }
 
         public async Task<List<Transaction>> GetAllWithDetailsAsListAsync()
         {
             return await _dataset.AsNoTracking()
-                .Include(x => x.TransactionType)
-                .Include(x => x.TransactionAmounts)
+                .Include(x => x.TransactionType).AsSplitQuery()
+                .Include(x => x.TransactionAmounts).AsSplitQuery()
                 .Include(x => x.User)
                 .ToListAsync();
         }        

@@ -4,7 +4,7 @@ export default function TransactionLista(props) {
     return (
         <div className='mt-3'>
 
-            <table className='table table-striped table-hover'>
+            <table id="transactionsTable" className='table table-striped table-hover'>
                 <thead className='table-dark mt-3'>
                     <tr>
                         <th scope='col'>Description</th>

@@ -130,6 +130,7 @@ export default function TransactionForm(props) {
                         dateFormat="dd/MM/yyyy"
                         wrapperClassName="date-picker"
                         className='form-control'
+                        id='datePicker'
                     />
                 </div>
                 <div className='col-md-6'>
@@ -167,6 +168,7 @@ export default function TransactionForm(props) {
                         <button
                             className='btn btn-outline-success'
                             type='submit'
+                            id="saveNewTransactionBtn"
                         >
                             <i className='fas fa-plus me-2'></i>
                             Salvar

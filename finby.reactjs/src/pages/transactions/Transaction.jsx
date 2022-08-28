@@ -108,7 +108,7 @@ export default function Transaction() {
             <TitlePage
                 title={'Transaction ' + (transaction.id !== 0 ? transaction.id : '')}
             >
-                <Button variant='outline-secondary' onClick={novaTransaction}>
+                <Button id="newTransactionButton" variant='outline-secondary' onClick={novaTransaction}>
                     <i className='fas fa-plus'></i>
                 </Button>
             </TitlePage>

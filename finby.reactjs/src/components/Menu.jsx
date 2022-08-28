@@ -8,7 +8,7 @@ export default function Menu() {
                 <Navbar.Brand as={NavLink} to='/'>
                     Ativy
                 </Navbar.Brand>
-                <Navbar.Toggle aria-controls='basic-navbar-nav' />
+                <Navbar.Toggle aria-controls='basic-navbar-nav' id="toggle" />
                 <Navbar.Collapse id='basic-navbar-nav'>
                     <Nav className='me-auto'>
                         <Nav.Link
@@ -19,6 +19,7 @@ export default function Menu() {
                             Clientes
                         </Nav.Link>
                         <Nav.Link
+                            id="menuTransaction"
                             className={(navData) => navData.isActive ? 'Active' : ''}
                             as={NavLink}
                             to='/transaction/lista'

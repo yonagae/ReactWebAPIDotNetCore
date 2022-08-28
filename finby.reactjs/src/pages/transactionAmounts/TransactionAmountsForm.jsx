@@ -19,9 +19,6 @@ export default function TransactionAmountsForm(props) {
 
     useEffect(() => {
         getAllUsers().then(result => setUsers(result));
-    }, []);
-
-    useEffect(() => {
         getAllTransactionAmounts();
     }, []);
 
@@ -67,7 +64,7 @@ export default function TransactionAmountsForm(props) {
     return (
         <div className="TransactionAmountsForm" >
 
-            <button className='btn btn-success float-end fa-plus  me-2' onClick={addFields}> Add</button>
+            <button className='btn btn-success float-end fa-plus  me-2' id="addNewTransactionBtn" onClick={addFields}> Add</button>
 
             <table className='table table-striped table-hover align-middle'>
                 <thead className='table-dark mt-3 align-middle'>

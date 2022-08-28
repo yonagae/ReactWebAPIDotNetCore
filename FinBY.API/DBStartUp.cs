@@ -28,7 +28,7 @@ public static class DBStartUp
         dbContext.SaveChanges();
 
         List<Transaction> transactions = new List<Transaction>();
-        for (int i = 1; i <= 100; i++)
+        for (int i = 1; i <= 10; i++)
         {
             List<TransactionAmount> transactionAmounts = new List<TransactionAmount>()
                     {
