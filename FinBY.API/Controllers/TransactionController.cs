@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FinBY.Domain.Commands;
 using FinBY.Domain.Contracts;
-using FinBY.Domain.Data.DTO;
+using FinBY.API.Data.DTO;
 using FinBY.Domain.Entities;
 using FinBY.Domain.Repositories;
 using MediatR;
@@ -209,6 +209,23 @@ namespace FinBY.API.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        //[HttpGet("userBalance")]
+        //[ProducesResponseType(typeof(List<TransactionDTO>), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<IActionResult> GetDashboardInfo(DateTime start, DateTime end)
+        //{
+        //    try
+        //    {
+        //        var transactions = await _unitOfWork.TransactionRepository.GetSumOfTransactionsByTypeByPeriod(start, end);
+        //        return Ok(transactions);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"Something went wrong inside the Transaction get action: {ex}");
+        //        return StatusCode(500, "Internal server error");
+        //    }
+        //}
 
     }
 }

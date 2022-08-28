@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
-using FinBY.Domain.Data.DTO;
 
 namespace FinBY.Infra.Repository
 {
@@ -16,10 +15,10 @@ namespace FinBY.Infra.Repository
         {
         }
 
-        public User ValidateCredentials(UserLoginDTO user)
+        public User ValidateCredentials(string userName, string password)
         {
-            var pass = ComputeHash(user.Password, new SHA256CryptoServiceProvider());
-            return _dataset.FirstOrDefault(u => (u.UserName == user.UserName) && (u.Password == pass));
+            var pass = ComputeHash(password, new SHA256CryptoServiceProvider());
+            return _dataset.FirstOrDefault(u => (u.UserName == userName) && (u.Password == pass));
         }
 
         public User ValidateCredentials(string userName)

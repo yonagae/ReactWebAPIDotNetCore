@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using FinBY.Domain.Commands.Interfaces;
-using FinBY.Domain.Data.DTO;
 using FinBY.Domain.Entities;
 
 namespace FinBY.Domain.Commands

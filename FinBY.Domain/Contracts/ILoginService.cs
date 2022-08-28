@@ -1,13 +1,12 @@
-﻿using FinBY.Domain.Data.DTO;
-using FinBY.Domain.Entities;
+﻿using FinBY.Domain.Entities;
 
 namespace FinBY.Domain.Contracts
 {
     public interface ILoginService
     {
-        TokenDTO ValidateCredentials(UserLoginDTO user);
+        Token ValidateCredentials(string userName, string password);
 
-        TokenDTO ValidateCredentials(TokenDTO token);
+        Token ValidateCredentials(Token token);
 
         bool RevokeToken(string userName);
     }

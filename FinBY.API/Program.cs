@@ -10,13 +10,7 @@ using FinBY.Infra.Services;
 using NLog;
 using FinBY.LoggerService;
 using FinBY.API;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using FinBY.Domain.Configurations;
-using Microsoft.Extensions.Options;
-using System.Configuration;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);

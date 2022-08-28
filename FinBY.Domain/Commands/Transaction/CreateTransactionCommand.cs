@@ -2,7 +2,6 @@
 using FinBY.Domain.Commands.Interfaces;
 using FinBY.Domain.Entities;
 using System;
-using FinBY.Domain.Data.DTO;
 
 namespace FinBY.Domain.Commands
 {

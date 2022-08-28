@@ -21,6 +21,7 @@ namespace FinBY.WebTests
         public void GivenIHaveNavigatedToFinByWebsite()
         {
             chromeDriver.Navigate().GoToUrl("https://localhost:3000/");
+            chromeDriver.Manage().Window.Maximize();
             var wait = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(12));
             wait.Until(ExpectedConditions.ElementExists(By.ClassName("container")));
             Assert.IsTrue(chromeDriver.Title.ToLower().Contains("finby"));
@@ -30,7 +31,8 @@ namespace FinBY.WebTests
         public void WhenIPressTheTransactionsMenuOption()
         {
             var toggle = chromeDriver.FindElement(By.Id("toggle"));
-            toggle.Click();
+            if (toggle.Enabled && toggle.Displayed)
+                toggle.Click();
 
             var menuOption = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(12)).Until(ExpectedConditions.ElementToBeClickable(By.Id("menuTransaction")));
             menuOption.Click();
@@ -51,7 +53,8 @@ namespace FinBY.WebTests
         public void GivenIPressTheTransactionsMenuOption()
         {
             var toggle = chromeDriver.FindElement(By.Id("toggle"));
-            toggle.Click();
+            if (toggle.Enabled && toggle.Displayed)
+                toggle.Click();
 
             var menuOption = new WebDriverWait(chromeDriver, TimeSpan.FromSeconds(12)).Until(ExpectedConditions.ElementToBeClickable(By.Id("menuTransaction")));
             menuOption.Click();

@@ -1,8 +1,8 @@
-﻿namespace FinBY.Domain.Data.DTO;
+﻿namespace FinBY.Domain.Entities;
 
-public class TokenDTO
+public class Token
 {
-    public TokenDTO(bool authenticated, string created, string expiration, string accessToken, string refreshToken)
+    public Token(bool authenticated, string created, string expiration, string accessToken, string refreshToken)
     {
         Authenticated = authenticated;
         Created = created;

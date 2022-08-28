@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FinBY.Domain.Commands;
 using FinBY.Domain.Contracts;
-using FinBY.Domain.Data.DTO;
+using FinBY.API.Data.DTO;
 using FinBY.Domain.Entities;
 using FinBY.Domain.Repositories;
 using MediatR;

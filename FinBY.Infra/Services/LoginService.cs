@@ -1,6 +1,5 @@
 ﻿using FinBY.Domain.Configurations;
 using FinBY.Domain.Contracts;
-using FinBY.Domain.Data.DTO;
 using FinBY.Domain.Entities;
 using FinBY.Domain.Repositories;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -25,9 +24,9 @@ namespace FinBY.Infra.Services
             _tokenService = tokenService;
         }
 
-        public TokenDTO ValidateCredentials(UserLoginDTO userCredentials)
+        public Token ValidateCredentials(string userName, string password)
         {
-            var user = _repository.ValidateCredentials(userCredentials);
+            var user = _repository.ValidateCredentials( userName,  password);
             if (user == null) return null;
             var claims = new List<Claim>
             {
@@ -46,7 +45,7 @@ namespace FinBY.Infra.Services
             DateTime createDate = DateTime.Now;
             DateTime expirationDate = createDate.AddMinutes(_configuration.Minutes);
 
-            return new TokenDTO(
+            return new Token(
                 true,
                 createDate.ToString(DATE_FORMAT),
                 expirationDate.ToString(DATE_FORMAT),
@@ -55,7 +54,7 @@ namespace FinBY.Infra.Services
                 );
         }
 
-        public TokenDTO ValidateCredentials(TokenDTO token)
+        public Token ValidateCredentials(Token token)
         {
             var accessToken = token.AccessToken;
             var refreshToken = token.RefreshToken;
@@ -80,7 +79,7 @@ namespace FinBY.Infra.Services
             DateTime createDate = DateTime.Now;
             DateTime expirationDate = createDate.AddMinutes(_configuration.Minutes);
 
-            return new TokenDTO(
+            return new Token(
                 true,
                 createDate.ToString(DATE_FORMAT),
                 expirationDate.ToString(DATE_FORMAT),

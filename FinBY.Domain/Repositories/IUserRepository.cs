@@ -1,5 +1,4 @@
-﻿using FinBY.Domain.Data.DTO;
-using FinBY.Domain.Entities;
+﻿using FinBY.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ namespace FinBY.Domain.Repositories
 
     public interface IUserRepository : IRepository<User, int>
     {
-        User ValidateCredentials(UserLoginDTO user);
+        User ValidateCredentials(string userName, string password);
 
         User ValidateCredentials(string username);
 

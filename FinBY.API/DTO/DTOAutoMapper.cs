@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinBY.Domain
+namespace FinBY.API
 {
     public  class DTOAutoMapper
     {

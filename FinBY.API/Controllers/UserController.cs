@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using FinBY.Domain.Contracts;
-using FinBY.Domain.Data.DTO;
+using FinBY.API.Data.DTO;
 using FinBY.Domain.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using FinBY.Domain.Entities;
 
 namespace FinBY.API.Controllers
 {
@@ -57,7 +58,7 @@ namespace FinBY.API.Controllers
         {
             if (user == null) return BadRequest("Ivalid client request");
 
-            var token = _loginService.ValidateCredentials(user);
+            var token = _loginService.ValidateCredentials(user.UserName, user.Password);
 
             if (token == null) return Unauthorized();
             return Ok(token);
@@ -69,10 +70,11 @@ namespace FinBY.API.Controllers
         {
             if (tokenVo is null) return BadRequest("Ivalid client request");
 
-            var token = _loginService.ValidateCredentials(tokenVo);
+            var token = _mapper.Map<Token>(tokenVo);
+            var tokenRefreshed = _loginService.ValidateCredentials(token);
 
-            if (token == null) return BadRequest("Ivalid client request");
-            return Ok(token);
+            if (tokenRefreshed == null) return BadRequest("Ivalid client request");
+            return Ok(tokenRefreshed);
         }
 
 
