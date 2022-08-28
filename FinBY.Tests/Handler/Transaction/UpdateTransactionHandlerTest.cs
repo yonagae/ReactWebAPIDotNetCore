@@ -27,7 +27,7 @@ namespace FinBY.Tests.Handler
 
             var result = handler.Handle(new UpdateTransactionCommand(transaction), new System.Threading.CancellationToken());
 
-            unitOfWork.TransactionRepository.Received().Update(Arg.Is<Transaction>(transaction));
+            unitOfWork.TransactionRepository.Received().UpdateTransactionWithAmounts(Arg.Is<Transaction>(transaction));
             result.Result.Success.Should().BeTrue();
             result.Result.Messages.Should().BeNullOrEmpty();
         }

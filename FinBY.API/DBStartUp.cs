@@ -7,9 +7,6 @@ public static class DBStartUp
 {
     public static void StartupBase(ApplicationDbContext dbContext)
     {
-        return;
-
-
         dbContext.Database.EnsureDeleted();
         dbContext.Database.EnsureCreated();
 
