@@ -200,7 +200,7 @@ namespace FinBY.API.Controllers
         {
             try
             {
-                var transactions = await _unitOfWork.TransactionRepository.GetSumOfTransactionsByType(new DateTime(2022,02,01), new DateTime(2022, 02, 28));
+                var transactions = await _unitOfWork.TransactionRepository.GetSumOfTransactionsByType(new DateTime(2022,01,01), new DateTime(2023, 01, 01));
                 return Ok(transactions);
             }
             catch (Exception ex)
