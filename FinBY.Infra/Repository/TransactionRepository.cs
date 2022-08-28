@@ -112,7 +112,7 @@ namespace FinBY.Infra.Repository
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<Tuple<TransactionType, decimal>>> GetSumOfTransactionsByType(DateTime begin, DateTime end)
+        public async Task<List<Tuple<TransactionType, decimal>>> GetSumOfTransactionsByTypeByPeriod(DateTime begin, DateTime end)
         {
             var sums = await _dataset.AsNoTracking()
                   .Where(x => x.Date >= begin && x.Date <= end)

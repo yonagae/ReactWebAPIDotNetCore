@@ -20,6 +20,6 @@ namespace FinBY.Domain.Repositories
 
         public Task<int> UpdateTransactionWithAmounts(Transaction transaction);
 
-        public Task<List<Tuple<TransactionType, decimal>>> GetSumOfTransactionsByType(DateTime begin, DateTime end);
+        public Task<List<Tuple<TransactionType, decimal>>> GetSumOfTransactionsByTypeByPeriod(DateTime begin, DateTime end);
     }
 }

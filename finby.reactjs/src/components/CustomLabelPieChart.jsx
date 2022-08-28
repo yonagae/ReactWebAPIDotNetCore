@@ -24,9 +24,10 @@ export default function CustomLabelPieChart(prop) {
         }
     }
 
-    pieChartData = prop.fillPieData();    
+    pieChartData = prop.fillPieData();
+    
     pieChartData.forEach(element => {
-        totalSum += element.sum;
+        totalSum += element.value;
     })
 
     return (

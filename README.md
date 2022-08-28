@@ -1,6 +1,6 @@
 # .NET Core API ReactJS
 
-A project for study purpose.
+A project to manage home finance using REACTJS with .NetCore API for study purpose.
 
 ## Projects
 

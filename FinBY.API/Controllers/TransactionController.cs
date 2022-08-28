@@ -196,11 +196,11 @@ namespace FinBY.API.Controllers
         [HttpGet("dashboard")]
         [ProducesResponseType(typeof(List<TransactionDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetDashboardInfo()
+        public async Task<IActionResult> GetDashboardInfo(DateTime start, DateTime end)
         {
             try
             {
-                var transactions = await _unitOfWork.TransactionRepository.GetSumOfTransactionsByType(new DateTime(2022,01,01), new DateTime(2023, 01, 01));
+                var transactions = await _unitOfWork.TransactionRepository.GetSumOfTransactionsByTypeByPeriod(start, end);
                 return Ok(transactions);
             }
             catch (Exception ex)
