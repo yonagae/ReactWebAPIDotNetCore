@@ -75,7 +75,10 @@ namespace FinBY.API.Controllers
             }
         }
 
-        [HttpPost]  
+        [HttpPost]
+        [ProducesResponseType(typeof(NewTransactionDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateTransaction([FromBody] NewTransactionDTO transaction)
         {
             try
@@ -102,6 +105,9 @@ namespace FinBY.API.Controllers
 
 
         [HttpPut("{id}")]
+        [ProducesResponseType(typeof(NewTransactionDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateTransaction(long id, [FromBody] TransactionDTO transaction)
         {
             try
@@ -128,6 +134,10 @@ namespace FinBY.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteTransaction(int id)
         {
             try
@@ -159,11 +169,20 @@ namespace FinBY.API.Controllers
 
 
         [HttpGet("{id}/TransactionAmounts")]
+        [ProducesResponseType(typeof(List<TransactionAmountDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTransactionAmountsByTransactionID(int id)
         {
             try
             {
                 var transactionAmounts = await _unitOfWork.TransactionAmountRepository.GetTransactionAmountsByTransactionIdAsync(id);
+
+                if (transactionAmounts == null || transactionAmounts.Count <= 0)
+                {
+                    return NotFound($"Transaction Amounts  with id {id} not found");
+                }
+
                 var transDTOList = _mapper.Map<List<TransactionAmountDTO>>(transactionAmounts);
                 return Ok(transDTOList);
             }

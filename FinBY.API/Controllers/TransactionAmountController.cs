@@ -7,10 +7,12 @@ using FinBY.Domain.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace FinBY.API.Controllers
 {
+    /// <summary>
+    /// This class should not be used, this is for example purpose
+    /// </summary>
     [ApiVersion("1")]
     [Route("api/v{version:apiVersion}/TransactionAmounts")]
     [ApiController]

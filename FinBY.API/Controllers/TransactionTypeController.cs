@@ -34,6 +34,9 @@ namespace FinBY.API.Controllers
         }
 
         [HttpGet]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<TransactionTypeDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTransactionTypes()
         {
             try
@@ -49,7 +52,10 @@ namespace FinBY.API.Controllers
             }
         }
 
-        [HttpPost]  
+        [HttpPost]
+        [ProducesResponseType(typeof(TransactionTypeDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateTransactionType([FromBody] NewTransactionTypeDTO transactionType)
         {
             try
@@ -65,7 +71,8 @@ namespace FinBY.API.Controllers
                 if(!response.Success)
                     return StatusCode(500, "Internal server error");
 
-                return Ok(response.Data);
+                var typeDTO = _mapper.Map<TransactionTypeDTO>(response.Data);
+                return Ok(typeDTO);
             }
             catch (Exception ex)
             {
@@ -76,6 +83,9 @@ namespace FinBY.API.Controllers
             
 
         [HttpPut]
+        [ProducesResponseType(typeof(TransactionTypeDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateTransactionType([FromBody] TransactionTypeDTO transactionType)
         {
             try
@@ -90,7 +100,8 @@ namespace FinBY.API.Controllers
 
                 if (response.Success)
                 {
-                    return Ok(response.Data);
+                    var typeDTO = _mapper.Map<TransactionTypeDTO>(response.Data);
+                    return Ok(typeDTO);
                 }
                 else
                 {
@@ -104,6 +115,10 @@ namespace FinBY.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteTransactionType(int id)
         {
             try
