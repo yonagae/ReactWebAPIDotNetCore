@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import api from '../../api/transaction';
 import TransactionAmountsForm from '../transactionAmounts/TransactionAmountsForm';
 import DatePicker from "react-datepicker";
+import Button from 'react-bootstrap/Button';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 const initialTransaction = {
     id: 0,
@@ -19,6 +22,7 @@ export default function TransactionForm(props) {
     const [transaction, setTransaction] = useState(transactionAtual());
     const [transactionTypes, setTransactionTypes] = useState([]);
     const [startDate, setStartDate] = useState(new Date());
+    const [radioValue, setRadioValue] = useState('1');
 
     useEffect(() => {
         if (props.ativSelecionada.id !== 0) {
@@ -82,14 +86,47 @@ export default function TransactionForm(props) {
         }
     }
 
-    async function getTransactionTypes () {
-        const response = await api.get('transactionTypes');
-        return response.data;
-    };  
+    async function getTransactionTypes() {
+        try {
+            const response = await api.get('transactionTypes');
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+               console.log('APIError', err.message);
+            } else if (err.request) {
+               console.log('RequestError', err.message);
+            } else {
+                console.log('Error', err.message);
+            }
+        }
+    };
+
+    const radios = [
+        { name: 'Expense', value: '1' },
+        { name: 'Deposit', value: '2' },
+    ];
 
     return (
         <>
             <form className='row g-3' onSubmit={handleSubmit}>
+                <ButtonGroup>
+                    {radios.map((radio, idx) => (
+                        <ToggleButton
+                            key={idx}
+                            id={`radio-${idx}`}
+                            type="radio"
+                            variant={idx % 2 ? 'outline-success' : 'outline-danger'}
+                            name="radio"
+                            value={radio.value}
+                            checked={radioValue === radio.value}
+                            onChange={(e) => setRadioValue(e.currentTarget.value)}
+                        >
+                            {radio.name}
+                        </ToggleButton>
+                    ))}
+                </ButtonGroup>
+                <br />
+
                 <div className='col-md-6'>
                     <label className='form-label'>Short Descrition</label>
                     <input
@@ -99,6 +136,7 @@ export default function TransactionForm(props) {
                         id='shortDescription'
                         type='text'
                         className='form-control'
+                        required
                     />
                 </div>
                 <div className='col-md-6'>
@@ -157,6 +195,8 @@ export default function TransactionForm(props) {
                     />
                     <hr />
                 </div>
+
+               
 
                 <TransactionAmountsForm
                     transaction={transaction}

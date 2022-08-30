@@ -210,22 +210,22 @@ namespace FinBY.API.Controllers
             }
         }
 
-        //[HttpGet("userBalance")]
-        //[ProducesResponseType(typeof(List<TransactionDTO>), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> GetDashboardInfo(DateTime start, DateTime end)
-        //{
-        //    try
-        //    {
-        //        var transactions = await _unitOfWork.TransactionRepository.GetSumOfTransactionsByTypeByPeriod(start, end);
-        //        return Ok(transactions);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError($"Something went wrong inside the Transaction get action: {ex}");
-        //        return StatusCode(500, "Internal server error");
-        //    }
-        //}
+        [HttpGet("userbalance")]
+        [ProducesResponseType(typeof(List<TransactionDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetUserBalanceByPeriod(DateTime start, DateTime end)
+        {
+            try
+            {
+                var transactions = await _unitOfWork.TransactionRepository.GetSumOfTransactionsByUserByPeriod(start, end);
+                return Ok(transactions);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside the Transaction get action: {ex}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
 
     }
 }

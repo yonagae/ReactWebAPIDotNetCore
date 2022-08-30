@@ -8,20 +8,36 @@ export default function TransactionAmountsForm(props) {
 
     async function getAllTransactionAmounts() {
 
-        if (props.transaction.id <= 0) setFormFields([{
-                                                    id: '0',
-                                                    userId: '0',
-                                                    amount: ''
-                                                }]);
+        if (props.transaction.id <= 0) setFormFields([{ id: '0', userId: '0', amount: '' }]);
 
-        const response = await api.get(`transactions/${props.transaction.id}/TransactionAmounts`);
-        props.transaction.transactionAmounts = response.data;
-        setFormFields( response.data );
+        try {
+            const response = await api.get(`transactions/${props.transaction.id}/TransactionAmounts`);
+            props.transaction.transactionAmounts = response.data;
+            setFormFields(response.data);
+        } catch (err) {
+            if (err.response) {
+               console.log('APIError', err.message);
+            } else if (err.request) {
+               console.log('RequestError', err.message);
+            } else {
+                console.log('Error', err.message);
+            }
+        }
     }
 
     async function getAllUsers() {
-        const response = await api.get('users');
-        return response.data;
+        try {
+            const response = await api.get('users');
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+               console.log('APIError', err.message);
+            } else if (err.request) {
+               console.log('RequestError', err.message);
+            } else {
+                console.log('Error', err.message);
+            }
+        }
     };
 
     useEffect(() => {
@@ -108,12 +124,14 @@ export default function TransactionAmountsForm(props) {
                                         value={form.amount}
                                         className="form-control"
                                         type="number"
+                                        required 
                                     />
                                 </td>
                                 <td >
                                     <button
                                         className='btn btn-danger '
                                         onClick={(e) => removeFields(e, index)}
+                                        disabled={formFields.length <= 1}
                                     >
                                         Remove
                                     </button>

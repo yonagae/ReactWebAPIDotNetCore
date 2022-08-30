@@ -27,15 +27,6 @@ namespace FinBY.Infra.Repository
                 .ToListAsync(); ;
         }
 
-        public async Task<List<Transaction>> GetAllWithDetailsAsListAsync()
-        {
-            return await _dataset.AsNoTracking()
-                .Include(x => x.TransactionType).AsSplitQuery()
-                .Include(x => x.TransactionAmounts).AsSplitQuery()
-                .Include(x => x.User)
-                .ToListAsync();
-        }        
-
         public async Task<PagedResult<Transaction>> GetAllWithDetailsAsPagedResultAsync(PagedTransactionParams transactionParams)
         {
             IQueryable<Transaction> query = _dataset.AsNoTracking()
@@ -90,7 +81,7 @@ namespace FinBY.Infra.Repository
 
         public async Task<bool> DeleteCascadeToAmounts(Transaction transaction)
         {
-            //Exemple when we want to execute pure SQL to be quicker and a begin and commit transaction to commit everything at once
+            //Example when we want to execute pure SQL to be quicker and a begin and commit transaction to commit everything at once
             await _context.Database.BeginTransactionAsync();
 
             await _context.Database.ExecuteSqlInterpolatedAsync(
@@ -120,6 +111,20 @@ namespace FinBY.Infra.Repository
                   .Select(x => new Tuple<TransactionType, decimal>(
                        x.First().TransactionType,
                        x.Sum(y => y.TotalAmount) 
+                  )).
+                  ToListAsync();
+
+            return sums;
+        }
+
+        public async Task<List<Tuple<User, decimal>>> GetSumOfTransactionsByUserByPeriod(DateTime begin, DateTime end)
+        {
+            var sums = await _dataset.AsNoTracking()
+                  .Where(x => x.Date >= begin && x.Date <= end)
+                  .GroupBy(x => x.UserId)
+                  .Select(x => new Tuple<User, decimal>(
+                       x.First().User,
+                       x.Sum(y => y.TotalAmount)
                   )).
                   ToListAsync();
 

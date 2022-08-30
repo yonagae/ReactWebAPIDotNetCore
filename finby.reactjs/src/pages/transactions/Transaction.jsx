@@ -29,8 +29,18 @@ export default function Transaction() {
     };
 
     const pegaTodasTransactions = async () => {
-        const response = await api.get('transactions');
-        return response.data;
+        try {
+            const response = await api.get('transactions');
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+               console.log('APIError', err.message);
+            } else if (err.request) {
+               console.log('RequestError', err.message);
+            } else {
+                console.log('Error', err.message);
+            }
+        }
     };
 
     const novaTransaction = () => {

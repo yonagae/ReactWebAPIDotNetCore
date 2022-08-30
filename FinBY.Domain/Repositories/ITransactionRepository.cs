@@ -14,12 +14,11 @@ namespace FinBY.Domain.Repositories
 
         public Task<List<Transaction>> GetAllDetailedWithouAmountsAsync();
 
-        public Task<List<Transaction>> GetAllWithDetailsAsListAsync();
-
         public Task<PagedResult<Transaction>> GetAllWithDetailsAsPagedResultAsync(PagedTransactionParams transsactionParams);
 
         public Task<int> UpdateTransactionWithAmounts(Transaction transaction);
 
         public Task<List<Tuple<TransactionType, decimal>>> GetSumOfTransactionsByTypeByPeriod(DateTime begin, DateTime end);
+        public Task<List<Tuple<User, decimal>>> GetSumOfTransactionsByUserByPeriod(DateTime begin, DateTime end);
     }
 }
