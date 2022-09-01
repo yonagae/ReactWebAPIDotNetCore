@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinBY.Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,7 +20,6 @@ namespace FinBY.Domain.Entities
         [Required(ErrorMessage = "Date must be specified")]
         public DateTime Date { get; private set; }
 
-        [Required(ErrorMessage = "Description must be specified")]
         public int TransactionTypeId { get; private set; }
 
         [Required(ErrorMessage = "User must be specified")]
@@ -40,24 +40,22 @@ namespace FinBY.Domain.Entities
         [MinLength(1)]
         [Required(ErrorMessage = "TransactionAmount must be specified")]
         public IReadOnlyCollection<TransactionAmount> TransactionAmounts => _transactionAmounts;
-
-
+        
+        public eTransactionFlow Flow { get; private set; } 
         public User User { get; private set; }
         public TransactionType TransactionType { get; private set; }
 
 
-        public Transaction(int transactionTypeId, int userId, DateTime date, string description, string shortDescription)
+        public Transaction(eTransactionFlow flow, int transactionTypeId, int userId, DateTime date, string description, string shortDescription)
         {
+            Flow = flow;
             Date = date;
             TimeStamp = DateTime.Now;
             TransactionTypeId = transactionTypeId;
             Description = description;
             ShortDescription = shortDescription;
-
-            _transactionAmounts = new List<TransactionAmount>();
-       
-
             UserId = userId;
+            _transactionAmounts = new List<TransactionAmount>();               
         }
     }
 }

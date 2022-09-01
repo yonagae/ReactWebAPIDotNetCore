@@ -1,5 +1,6 @@
 using FinBY.Domain.Commands;
 using FinBY.Domain.Entities;
+using FinBY.Domain.Enum;
 using FinBY.Domain.Handler;
 using FinBY.Domain.Repositories;
 using FinBY.Infra.Repository;
@@ -47,8 +48,8 @@ namespace FinBY.DBTests
             createdTransaction.Date.Day.Should().Be(11);
             createdTransaction.TransactionAmounts.Count.Should().Be(2);
             createdTransaction.TransactionAmounts.Should().OnlyContain(x => x.TransactionId == createdTransaction.Id);
-            createdTransaction.TransactionAmounts.Should().Contain(x => x.UserId == 1 && x.Amount == 10.55m);
-            createdTransaction.TransactionAmounts.Should().Contain(x => x.UserId == 2 && x.Amount == 20.3m);
+            createdTransaction.TransactionAmounts.Should().Contain(x => x.UserId == 1 && x.PositiveAmount == 10.55m);
+            createdTransaction.TransactionAmounts.Should().Contain(x => x.UserId == 2 && x.PositiveAmount == 20.3m);
         }
 
         [TestMethod]
@@ -72,7 +73,7 @@ namespace FinBY.DBTests
             createdTransaction.Date.Day.Should().Be(11);
             createdTransaction.TransactionAmounts.Count.Should().Be(3);
             createdTransaction.TransactionAmounts.Should().OnlyContain(x => x.TransactionId == createdTransaction.Id);
-            createdTransaction.TransactionAmounts.Should().Contain(x => x.UserId == 1 && x.Amount == 11.11m);
+            createdTransaction.TransactionAmounts.Should().Contain(x => x.UserId == 1 && x.PositiveAmount == 11.11m);
         }
 
 
@@ -99,7 +100,7 @@ namespace FinBY.DBTests
                 new TransactionAmount(0, 1, 10.55m),
                 new TransactionAmount(0, 2, 20.3m)
             };
-            var transaction = new Transaction(transactionType.Id, 1, new DateTime(2022, 02, 11), "Gasto 00", "Gasto 0");
+            var transaction = new Transaction(eTransactionFlow.Credit, transactionType.Id, 1, new DateTime(2022, 02, 11), "Gasto 00", "Gasto 0");
             transaction.AddAmounts(transactionAmounts);
             return transaction;
         }

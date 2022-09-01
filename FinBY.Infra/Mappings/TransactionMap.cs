@@ -1,4 +1,5 @@
 ﻿using FinBY.Domain.Entities;
+using FinBY.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -40,19 +41,25 @@ namespace FinBY.Infra.Mappings
            .HasColumnType("numeric(18, 2)")
            .IsRequired();
 
+            builder.Property(c => c.Flow)
+             .HasConversion<char>(p => (char)p, p => (eTransactionFlow)p)
+            .HasColumnType("char(1)")
+            .HasColumnName("Flow")
+            .HasMaxLength(1);
+
             builder.HasOne(x => x.TransactionType)
-                .WithMany()
-                .HasForeignKey(p => p.TransactionTypeId);
+            .WithMany()
+            .HasForeignKey(p => p.TransactionTypeId);
 
             builder.HasOne(x => x.User)
-                .WithMany()
-                .HasForeignKey(p => p.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
+            .WithMany()
+            .HasForeignKey(p => p.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.TransactionAmounts)
-             .WithOne()
-             .HasForeignKey(p => p.TransactionId)
-             .OnDelete(DeleteBehavior.Cascade);
+            .WithOne()
+            .HasForeignKey(p => p.TransactionId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

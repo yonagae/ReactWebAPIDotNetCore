@@ -1,5 +1,6 @@
 ﻿using FinBY.Domain.Data.PagedResult;
 using FinBY.Domain.Entities;
+using FinBY.Domain.Enum;
 using FinBY.Domain.Repositories;
 using FinBY.Infra.Repository;
 using FluentAssertions;
@@ -34,6 +35,7 @@ namespace FinBY.DBTests
                         new TransactionAmount(0, 2, 2.0m)
                     };
                 var transaction = new Transaction(
+                     eTransactionFlow.Credit,
                     (i % 3) + 1
                     , (i % 2) + 1
                     , new DateTime(2022, 01, 01).AddDays(i)

@@ -1,6 +1,7 @@
 ﻿using FinBY.Domain.Data;
 using FinBY.Domain.Data.PagedResult;
 using FinBY.Domain.Entities;
+using FinBY.Domain.Enum;
 using FinBY.Domain.Repositories;
 using FinBY.Infra.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -106,7 +107,7 @@ namespace FinBY.Infra.Repository
         public async Task<List<Tuple<TransactionType, decimal>>> GetSumOfTransactionsByTypeByPeriod(DateTime begin, DateTime end)
         {
             var sums = await _dataset.AsNoTracking()
-                  .Where(x => x.Date >= begin && x.Date <= end)
+                  .Where(x => x.Date >= begin && x.Date <= end && x.Flow == eTransactionFlow.Credit)
                   .GroupBy(x => x.TransactionTypeId)
                   .Select(x => new Tuple<TransactionType, decimal>(
                        x.First().TransactionType,
@@ -120,7 +121,7 @@ namespace FinBY.Infra.Repository
         public async Task<List<Tuple<User, decimal>>> GetSumOfTransactionsByUserByPeriod(DateTime begin, DateTime end)
         {
             var sums = await _dataset.AsNoTracking()
-                  .Where(x => x.Date >= begin && x.Date <= end)
+                  .Where(x => x.Date >= begin && x.Date <= end && x.Flow == eTransactionFlow.Credit)
                   .GroupBy(x => x.UserId)
                   .Select(x => new Tuple<User, decimal>(
                        x.First().User,

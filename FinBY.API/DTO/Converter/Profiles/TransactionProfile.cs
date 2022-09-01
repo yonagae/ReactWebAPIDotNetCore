@@ -14,8 +14,7 @@ namespace FinBY.API.Data.Converter.Profiles
             CreateMap<Transaction, TransactionDTO>();
             CreateMap<Transaction, NewTransactionDTO>();
             CreateMap<TransactionDTO, Transaction>();
-            CreateMap<NewTransactionDTO, Transaction>();
-            
+            CreateMap<NewTransactionDTO, Transaction>();            
         }
     }
 }

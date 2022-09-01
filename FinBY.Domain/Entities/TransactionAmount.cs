@@ -8,7 +8,7 @@ namespace FinBY.Domain.Entities
     public  class TransactionAmount : Entity
     {
         [Required(ErrorMessage = "Amount must be specified")]
-        public decimal Amount { get; private set; }
+        public decimal PositiveAmount { get; private set; }
 
         [Required(ErrorMessage = "TransactionId must be specified")]
         public int TransactionId { get; private set; }
@@ -18,9 +18,9 @@ namespace FinBY.Domain.Entities
 
         public User User { get; private set; }
 
-        public TransactionAmount(int transactionId, int userId, decimal amount)
+        public TransactionAmount(int transactionId, int userId, decimal positiveAmount)
         {
-            Amount = amount;
+            PositiveAmount = positiveAmount;
             TransactionId = transactionId;
             UserId = userId;
         }

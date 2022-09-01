@@ -1,5 +1,6 @@
 ﻿using FinBY.Domain.Commands;
 using FinBY.Domain.Entities;
+using FinBY.Domain.Enum;
 using FinBY.Domain.Handler;
 using FinBY.Domain.Repositories;
 using FinBY.Tests.Controllers;
@@ -20,7 +21,7 @@ namespace FinBY.Tests.Handler
             IUnitOfWork unitOfWork = new FakeUnitOfWork();
             CreateTransactionHandler handler = new CreateTransactionHandler(unitOfWork);            
             var transactionAmounts = new List<TransactionAmount>() { new TransactionAmount(0, 1, 10) };
-            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente");
+            Transaction transaction = new Transaction(eTransactionFlow.Credit, 1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente");
             transaction.AddAmounts(transactionAmounts);
 
             var result = handler.Handle(new CreateTransactionCommand(transaction), new System.Threading.CancellationToken());
@@ -35,7 +36,7 @@ namespace FinBY.Tests.Handler
         {
             IUnitOfWork unitOfWork = new FakeUnitOfWork();
             CreateTransactionHandler handler = new CreateTransactionHandler(unitOfWork);
-            Transaction transaction = new Transaction(1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente");
+            Transaction transaction = new Transaction(eTransactionFlow.Credit, 1, 1, new DateTime(2022, 01, 12), "Continente Gaia", "Continente");
 
             var result = handler.Handle(new CreateTransactionCommand(transaction), new System.Threading.CancellationToken());
 

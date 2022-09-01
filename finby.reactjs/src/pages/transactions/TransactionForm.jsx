@@ -15,14 +15,14 @@ const initialTransaction = {
     description: '',
     shortDescription: '',
     totalAmount: 0,
-    transactionAmounts: [{ id: 0, userId: '0', amount: '0'}]
+    transactionAmounts: [{ id: 0, userId: '0', amount: '0' }],
+    flow: 'c'.charCodeAt(0)
 };
 
 export default function TransactionForm(props) {
     const [transaction, setTransaction] = useState(transactionAtual());
     const [transactionTypes, setTransactionTypes] = useState([]);
     const [startDate, setStartDate] = useState(new Date());
-    const [radioValue, setRadioValue] = useState('1');
 
     useEffect(() => {
         if (props.ativSelecionada.id !== 0) {
@@ -53,16 +53,16 @@ export default function TransactionForm(props) {
         const totalAmountSum = transaction.transactionAmounts.reduce(
             (accumulator, transAmount) => accumulator + parseFloat(transAmount.amount), 0);
 
-        console.log(totalAmountSum);
-
-        setTransaction({ ...transaction, totalAmount: totalAmountSum });
+        if (isNaN(totalAmountSum)) 
+            setTransaction({ ...transaction, totalAmount: 0 });
+        else
+            setTransaction({ ...transaction, totalAmount: totalAmountSum });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         transaction.date = startDate;
-        //setTransaction({ ...transaction, datefghfgh: startDate });
 
         if (props.ativSelecionada.id !== 0) props.atualizarTransaction(transaction);
         else props.addTransaction(transaction);
@@ -101,25 +101,31 @@ export default function TransactionForm(props) {
         }
     };
 
-    const radios = [
-        { name: 'Expense', value: '1' },
-        { name: 'Deposit', value: '2' },
+    const expenseDepositRadiosOptions = [
+        { name: 'Expense', value: 'c'.charCodeAt(0) },
+        { name: 'Deposit', value: 'd'.charCodeAt(0)},
     ];
+
+    const changeExpenseOrDepositFlag = (e) => {
+        const { name, value } = e.target;
+
+        setTransaction({ ...transaction, [name]: parseInt(value) });
+    }
 
     return (
         <>
             <form className='row g-3' onSubmit={handleSubmit}>
                 <ButtonGroup>
-                    {radios.map((radio, idx) => (
+                    {expenseDepositRadiosOptions.map((radio, idx) => (
                         <ToggleButton
                             key={idx}
                             id={`radio-${idx}`}
                             type="radio"
                             variant={idx % 2 ? 'outline-success' : 'outline-danger'}
-                            name="radio"
+                            name="flow"
                             value={radio.value}
-                            checked={radioValue === radio.value}
-                            onChange={(e) => setRadioValue(e.currentTarget.value)}
+                            checked={transaction.flow == radio.value}
+                            onChange={changeExpenseOrDepositFlag}
                         >
                             {radio.name}
                         </ToggleButton>
@@ -194,9 +200,7 @@ export default function TransactionForm(props) {
                         className='form-control'
                     />
                     <hr />
-                </div>
-
-               
+                </div>               
 
                 <TransactionAmountsForm
                     transaction={transaction}

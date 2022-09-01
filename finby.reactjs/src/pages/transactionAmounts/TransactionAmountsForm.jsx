@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Alert } from 'react-bootstrap';
 import api from '../../api/transaction';
+import './TransactionAmountsForm.css';
 
 export default function TransactionAmountsForm(props) {
     const [formFields, setFormFields] = useState(null)
     const [users, setUsers] = useState([]);
 
     async function getAllTransactionAmounts() {
-
-        if (props.transaction.id <= 0) setFormFields([{ id: '0', userId: '0', amount: '' }]);
+        if (props.transaction.id <= 0) setFormFields([{ id: '0', userId: '0', positiveamount: '' }]);
 
         try {
             const response = await api.get(`transactions/${props.transaction.id}/TransactionAmounts`);
@@ -45,7 +45,24 @@ export default function TransactionAmountsForm(props) {
         getAllTransactionAmounts();
     }, []);
 
+    const preventPasteNegative = (e) => {
+        const clipboardData = e.clipboardData || window.clipboardData;
+        const pastedData = parseFloat(clipboardData.getData('text'));
+
+        if (pastedData < 0) {
+            e.preventDefault();
+        }
+    };
+
+    const preventMinusKeyPress = (e) => {
+        if (e.key === '-') {
+            e.preventDefault();
+        }
+    };
+
     const handleFormChange = (event, index) => {
+        if (event.target.name == 'positiveAmount' && event.target.value.includes('-')) console.log("menos ");
+
         let data = [...formFields];
         data[index][event.target.name] = event.target.value;
         setFormFields(data);
@@ -69,7 +86,7 @@ export default function TransactionAmountsForm(props) {
         let object = {
             id : '0',
             userId: '0',
-            amount: ''
+            positiveAmount: ''
         }
 
         setFormFields([...formFields, object])
@@ -118,10 +135,12 @@ export default function TransactionAmountsForm(props) {
 
                                 <td>
                                     <input
-                                        name='amount'
-                                        placeholder='amount'
+                                        name='positiveAmount'
+                                        placeholder='positive amount'
                                         onChange={event => handleFormChange(event, index)}
-                                        value={form.amount}
+                                        onKeyPress={preventMinusKeyPress}
+                                        onPaste={preventPasteNegative}
+                                        value={form.positiveAmount}
                                         className="form-control"
                                         type="number"
                                         required 

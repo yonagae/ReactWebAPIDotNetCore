@@ -28,7 +28,7 @@ namespace FinBY.WebTests.Features
         
         private static string[] featureTags = ((string[])(null));
         
-#line 1 "ShowTransactionList.feature"
+#line 1 "ManageTransaction.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]

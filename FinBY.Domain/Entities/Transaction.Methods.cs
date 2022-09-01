@@ -14,7 +14,7 @@ namespace FinBY.Domain.Entities
             if (transactionAmount == null) return false;
 
             _transactionAmounts.Add(transactionAmount);
-            TotalAmount += transactionAmount.Amount;
+            TotalAmount += transactionAmount.PositiveAmount;
 
             return true;
         }
@@ -35,7 +35,7 @@ namespace FinBY.Domain.Entities
             if (transactionAmount.TransactionId != this.Id) return false;
 
             _transactionAmounts.Remove(transactionAmount);
-            TotalAmount -= transactionAmount.Amount;
+            TotalAmount -= transactionAmount.PositiveAmount;
 
             return true;
         }

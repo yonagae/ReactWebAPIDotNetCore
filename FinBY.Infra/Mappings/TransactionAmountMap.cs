@@ -15,7 +15,7 @@ namespace FinBY.Infra.Mappings
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(c => c.Amount)
+            builder.Property(c => c.PositiveAmount)
             .HasColumnName("Amount")
             .HasColumnType("numeric(18, 2)")
             .IsRequired();

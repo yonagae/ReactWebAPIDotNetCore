@@ -1,5 +1,6 @@
 ﻿using FinBY.Domain.Commands;
 using FinBY.Domain.Entities;
+using FinBY.Domain.Enum;
 using FinBY.Domain.Handler;
 using FinBY.Domain.Repositories;
 using FinBY.Tests.Controllers;
@@ -35,7 +36,7 @@ namespace FinBY.Tests.Handler
         {
             IUnitOfWork unitOfWork = new FakeUnitOfWork();
             DeleteTransactionHandler handler = new DeleteTransactionHandler(unitOfWork);
-            unitOfWork.TransactionRepository.GetByIdAsync(TRANSACTION_ID).Returns<Transaction>(new Transaction(1, 1, new DateTime(), "Descrition", "ShortDescription"));
+            unitOfWork.TransactionRepository.GetByIdAsync(TRANSACTION_ID).Returns<Transaction>(new Transaction(eTransactionFlow.Credit, 1, 1, new DateTime(), "Descrition", "ShortDescription"));
 
             var result = handler.Handle(new DeleteTransactionCommand(TRANSACTION_ID), new System.Threading.CancellationToken());
 

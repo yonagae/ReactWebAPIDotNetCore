@@ -1,4 +1,5 @@
 ﻿using FinBY.Domain.Entities;
+using FinBY.Domain.Enum;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -15,7 +16,7 @@ namespace FinBY.Tests.Entities
         [TestMethod]
         public void AddTransactionAmount_NullValue_ReturnFalseDontChangeTotalAmount()
         {
-            Transaction transaction = new Transaction(1, 1, new DateTime(), "Descrition", "ShortDescription");
+            Transaction transaction = new Transaction(eTransactionFlow.Credit, 1, 1, new DateTime(), "Descrition", "ShortDescription");
             transaction.TotalAmount.Should().Be(0);
             transaction.TransactionAmounts.Count.Should().Be(0);
 
@@ -27,7 +28,7 @@ namespace FinBY.Tests.Entities
         [TestMethod]
         public void AddTransactionAmount_PositiveValues_GetCorrectTotalAmount()
         {
-            Transaction transaction = new Transaction(1, 1, new DateTime(), "Descrition", "ShortDescription");
+            Transaction transaction = new Transaction(eTransactionFlow.Credit, 1, 1, new DateTime(), "Descrition", "ShortDescription");
             transaction.TotalAmount.Should().Be(0);
             transaction.TransactionAmounts.Count.Should().Be(0);
 
@@ -47,7 +48,7 @@ namespace FinBY.Tests.Entities
         [TestMethod]
         public void AddTransactionAmount_NegativeValues_GetCorrectTotalAmount()
         {
-            Transaction transaction = new Transaction(1, 1, new DateTime(), "Descrition", "ShortDescription");
+            Transaction transaction = new Transaction(eTransactionFlow.Credit, 1, 1, new DateTime(), "Descrition", "ShortDescription");
             transaction.TotalAmount.Should().Be(0);
             transaction.TransactionAmounts.Count.Should().Be(0);
 
@@ -67,7 +68,7 @@ namespace FinBY.Tests.Entities
         [TestMethod]
         public void RemoveTransactionAmount_NullValue_ReturnFalseDontChangeTotalAmount()
         {
-            Transaction transaction = new Transaction(1, 1, new DateTime(), "Descrition", "ShortDescription");
+            Transaction transaction = new Transaction(eTransactionFlow.Credit, 1, 1, new DateTime(), "Descrition", "ShortDescription");
             transaction.TotalAmount.Should().Be(0);
             transaction.TransactionAmounts.Count.Should().Be(0);
 
@@ -79,7 +80,7 @@ namespace FinBY.Tests.Entities
         [TestMethod]
         public void RemoveTransactionAmount_PositiveValues_GetCorrectTotalAmount()
         {
-            Transaction transaction = new Transaction(1, 1, new DateTime(), "Descrition", "ShortDescription");
+            Transaction transaction = new Transaction(eTransactionFlow.Credit, 1, 1, new DateTime(), "Descrition", "ShortDescription");
             var t1 = new TransactionAmount(transaction.Id, 11, 10.02m);
             var t2 = new TransactionAmount(transaction.Id, 11, 100.08m);
             var t3 = new TransactionAmount(transaction.Id, 11, 11);
@@ -103,7 +104,7 @@ namespace FinBY.Tests.Entities
         [TestMethod]
         public void RemoveTransactionAmount_NegativeValues_GetCorrectTotalAmount()
         {
-            Transaction transaction = new Transaction(1, 1, new DateTime(), "Descrition", "ShortDescription");
+            Transaction transaction = new Transaction(eTransactionFlow.Credit, 1, 1, new DateTime(), "Descrition", "ShortDescription");
             var t1 = new TransactionAmount(transaction.Id, 11, -10.02m);
             var t2 = new TransactionAmount(transaction.Id, 11, -100.08m);
             var t3 = new TransactionAmount(transaction.Id, 11, -11);

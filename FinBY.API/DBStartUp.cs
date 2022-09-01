@@ -1,4 +1,5 @@
 ﻿using FinBY.Domain.Entities;
+using FinBY.Domain.Enum;
 using FinBY.Infra.Context;
 
 namespace FinBY.API;
@@ -7,6 +8,8 @@ public static class DBStartUp
 {
     public static void StartupBase(ApplicationDbContext dbContext)
     {
+        //return;
+
         dbContext.Database.EnsureDeleted();
         dbContext.Database.EnsureCreated();
 
@@ -33,6 +36,7 @@ public static class DBStartUp
                         new TransactionAmount(0, 2, 2.0m)
                     };
             var transaction = new Transaction(
+                eTransactionFlow.Credit,
                 (i % 3) + 1
                 , (i % 2) + 1
                 , new DateTime(2022, 01, 01).AddDays(i)

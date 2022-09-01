@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinBY.Domain.Enum;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace FinBY.API.Data.DTO
 
         [Range(0, 999999.99)]
         public Decimal TotalAmount { get; set; }
-
         public DateTime Date { get; set; }
+        public eTransactionFlow Flow { get; set; }
     }
 }

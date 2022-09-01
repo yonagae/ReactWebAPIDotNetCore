@@ -11,6 +11,7 @@ export default function TransactionLista(props) {
                         <th scope='col'>Date</th>
                         <th scope='col'>Type</th>
                         <th scope='col'>User</th>
+                        <th scope='col'>Flow</th>
                         <th scope='col'>Amount</th>
                         <th scope='col'>Options</th>
                     </tr>
