@@ -1,13 +1,41 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
+import Badge from 'react-bootstrap/Badge';
 
 export default function TransactionItem(props) {
+
+    const getAmountColor = () => {
+        if (String.fromCharCode(props.transaction.flow) == 'c')
+            return { color: "red" };
+        else
+            return { color: "green" }
+    };
+
+    const getAmountIcon = () => {
+        if (String.fromCharCode(props.transaction.flow) == 'c')
+            return 'fa-sharp fa-solid fa-caret-down'
+        else
+            return 'fa-sharp fa-solid fa-caret-up'
+    };
+
     return (
 
         <tr key={props.transaction.id}>
             <td>{props.transaction.shortDescription}</td>
             <td>{new Date(props.transaction.date).toLocaleDateString()}</td>
-            <td>{props.transaction.transactionType.name}</td>
+            <td>
+                {
+                    <h5>
+                        <Badge ref={element => {
+                            if (element) {
+                                element.style.setProperty('background-color', props.transaction.transactionType.argbColor, 'important');
+                            }
+                        }}>
+                            {props.transaction.transactionType.name}
+                        </Badge>
+                    </h5>
+                }
+            </td>
             <td>{props.transaction.user.name}</td>
             <td>
                 {
@@ -26,7 +54,10 @@ export default function TransactionItem(props) {
             </td>
             <td>
                 <div text-align='right'>
-                    {"$" + props.transaction.totalAmount.toFixed(2)}
+                    <i className={getAmountIcon()} style={getAmountColor()}></i>
+                    <a style={getAmountColor()}>
+                        {"$" + props.transaction.totalAmount.toFixed(2)}
+                    </a>
                 </div>
             </td>
             <td>

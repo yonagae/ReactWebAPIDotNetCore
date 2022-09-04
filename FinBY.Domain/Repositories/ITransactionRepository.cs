@@ -10,6 +10,7 @@ namespace FinBY.Domain.Repositories
 {
     public interface ITransactionRepository : IRepository<Transaction, int>
     {
+        public void Add(IList<Transaction> transactions);
         public Task<Transaction> GetDetailedByIdAsync(int id);
 
         public Task<List<Transaction>> GetAllDetailedWithouAmountsAsync();

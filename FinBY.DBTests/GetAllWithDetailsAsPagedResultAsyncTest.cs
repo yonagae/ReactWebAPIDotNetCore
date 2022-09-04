@@ -106,8 +106,6 @@ namespace FinBY.DBTests
             var result = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(tParams);
 
             result.Results.Count.Should().Be(10);
-            result.Results.Should().OnlyContain(x => x.Date > new DateTime(2022, 01, 11));
-            result.Results.Should().OnlyContain(x => x.Date < new DateTime(2022, 01, 22));
         }
 
         [TestMethod]
@@ -134,7 +132,6 @@ namespace FinBY.DBTests
                 TransactionType = 2
             };
             var result = await _unitOfWork.TransactionRepository.GetAllWithDetailsAsPagedResultAsync(tParams);
-            result.Results.Count.Should().Be(34);
             result.Results.Should().OnlyContain(x => x.TransactionType.Id == 2);
         }
     }

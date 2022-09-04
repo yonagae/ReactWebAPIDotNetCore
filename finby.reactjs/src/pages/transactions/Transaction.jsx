@@ -101,12 +101,18 @@ export default function Transaction() {
 
         transactionTypeNames.forEach(element => {
             const sum = transactions.reduce((accumulator, object) => {
-                if (object.transactionType.name == element)
+                if (object.transactionType.name == element
+                    && String.fromCharCode(object.flow) == 'c')
                     return accumulator + object.totalAmount;
                 else
                     return accumulator;
             }, 0);
-            pieChartData.push({ name: element, value: sum });
+
+            const argbColor = transactions.find(tr => {
+                return tr.transactionType.name == element;
+            }).transactionType.argbColor;
+
+            pieChartData.push({ name: element, value: sum, argbColor: argbColor});
         });
 
 

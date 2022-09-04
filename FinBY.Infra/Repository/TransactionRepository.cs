@@ -20,6 +20,11 @@ namespace FinBY.Infra.Repository
         {
         }
 
+        public void Add(IList<Transaction> transactions)
+        {
+            _dataset.AddRange(transactions);
+        }
+
         public async Task<List<Transaction>> GetAllDetailedWithouAmountsAsync()
         {
              return await _dataset.AsNoTracking()

@@ -1,9 +1,35 @@
 import TransactionItem from './TransactionItem';
+import { useState } from 'react';
+import { Button, FormControl, InputGroup } from 'react-bootstrap';
 
 export default function TransactionLista(props) {
+    const [termoBusca, setTermoBusca] = useState('');
+
+    const handleInputChange = (e) => {
+        setTermoBusca(e.target.value);
+    };
+
+    const filteredTransactions = props.transactions.filter((transaction) => {
+
+        var searchableText = transaction.description;
+        searchableText += transaction.shortDescription + ' ';
+        searchableText += transaction.user.name + ' ';
+        searchableText += transaction.transactionType.name + ' ';
+        searchableText += transaction.totalAmount + ' ';
+
+        return searchableText.toLowerCase()
+            .includes(termoBusca.toLowerCase());
+    });
+
     return (
         <div className='mt-3'>
-
+            <InputGroup className='mt-3 mb-3'>
+                <InputGroup.Text>Search:</InputGroup.Text>
+                <FormControl
+                    onChange={handleInputChange}
+                    placeholder='Search'
+                />
+            </InputGroup>
             <table id="transactionsTable" className='table table-striped table-hover'>
                 <thead className='table-dark mt-3'>
                     <tr>
@@ -18,7 +44,7 @@ export default function TransactionLista(props) {
                 </thead>
                 <tbody>
 
-                    {props.transactions.map((transaction) => (
+                    {filteredTransactions.map((transaction) => (
                         <TransactionItem
                             key={transaction.id}
                             transaction={transaction}

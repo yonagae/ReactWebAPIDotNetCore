@@ -46,7 +46,8 @@ export default function CustomLabelPieChart(prop) {
                     {pieChartData.map((entry, index) => (
                         <Cell
                             key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
+                            //fill={COLORS[index % COLORS.length]}
+                            fill={entry.argbColor}
                         />
                     ))}
                 </Pie>

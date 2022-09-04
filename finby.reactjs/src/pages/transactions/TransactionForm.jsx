@@ -51,7 +51,7 @@ export default function TransactionForm(props) {
 
     const updateTotalAmount = () => {
         const totalAmountSum = transaction.transactionAmounts.reduce(
-            (accumulator, transAmount) => accumulator + parseFloat(transAmount.amount), 0);
+            (accumulator, transAmount) => accumulator + parseFloat(transAmount.positiveAmount), 0);
 
         if (isNaN(totalAmountSum)) 
             setTransaction({ ...transaction, totalAmount: 0 });

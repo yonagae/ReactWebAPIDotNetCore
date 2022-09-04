@@ -19,6 +19,10 @@ namespace FinBY.Infra.Mappings
                 .HasColumnName("Name")
                 .HasMaxLength(100)
                 .IsRequired();
+
+            builder.Property(c => c.ArgbColor)
+                .HasColumnName("ArgbColor")
+                .IsRequired();
         }
     }
 }

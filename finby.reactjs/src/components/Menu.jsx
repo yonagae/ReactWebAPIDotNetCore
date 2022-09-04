@@ -26,6 +26,15 @@ export default function Menu() {
                         >
                             Transactions
                         </Nav.Link>
+
+                        <Nav.Link
+                            className={(navData) => navData.isActive ? 'Active' : ''}
+                            as={NavLink}
+                            to='/transactionType/lista'
+                        >
+                            Transaction Types
+                        </Nav.Link>
+
                     </Nav>
                     <Nav>
                         <NavDropdown

@@ -24,13 +24,12 @@ namespace FinBY.Domain.Handler
         {
 
             var result = await _unitOfWork.TransactionTypeRepository.GetByIdAsync(request.TransactionType.Id);
-            if (result != null) return new GenericChangeCommandResult(false, null, result, true);
+            if (result == null) return new GenericChangeCommandResult(false, null, result, true);
 
             _unitOfWork.TransactionTypeRepository.Update(request.TransactionType);
             await _unitOfWork.SaveAsync();
 
             return new GenericChangeCommandResult(true, null, result);
         }
-
     }
 }

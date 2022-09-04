@@ -12,5 +12,7 @@ namespace FinBY.API.Data.DTO
         [Required]
         [StringLength(10)]
         public string Name { get;  set; }
+
+        public string ArgbColor { get; set; }
     }
 }

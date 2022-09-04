@@ -5,6 +5,7 @@ import Cliente from './pages/clientes/Cliente';
 import ClienteForm from './pages/clientes/ClienteForm';
 import Dashboard from './pages/dashboard/Dashboard';
 import PageNotFound from './pages/PageNotFound';
+import TransacationType from './pages/transacationType/TransacationType'
 
 export default function App() {
     return (
@@ -16,6 +17,7 @@ export default function App() {
             <Route path='/cliente/:id/transaction' element={<Transaction />} />
             <Route path='/cliente/detalhe/' element={<ClienteForm />} />
             <Route path='/cliente/detalhe/:id' element={<ClienteForm />} />
+            <Route path='/transactionType/*' element={<TransacationType />} />            
             <Route element={<PageNotFound />} />
         </Routes>
     );

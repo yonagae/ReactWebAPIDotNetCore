@@ -80,13 +80,14 @@ namespace FinBY.API.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-            
 
-        [HttpPut]
+
+
+        [HttpPut("{id}")]
         [ProducesResponseType(typeof(TransactionTypeDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateTransactionType([FromBody] TransactionTypeDTO transactionType)
+        public async Task<IActionResult> UpdateTransactionType(long id, [FromBody] TransactionTypeDTO transactionType)
         {
             try
             {

@@ -1,6 +1,7 @@
 ﻿using FinBY.Domain.Entities;
 using FinBY.Domain.Enum;
 using FinBY.Infra.Context;
+using System.Drawing;
 
 namespace FinBY.API;
 
@@ -19,11 +20,11 @@ public static class DBStartUp
          );
 
         dbContext.AddRange(
-          new TransactionType("Casa"),
-          new TransactionType("Mercado"),
-          new TransactionType("Pessoal"),
-          new TransactionType("Luz"),
-          new TransactionType("Agua"));
+          new TransactionType("Casa", Color.Aqua.ToArgb()),
+          new TransactionType("Mercado", Color.Aquamarine.ToArgb()),
+          new TransactionType("Pessoal", Color.LightGreen.ToArgb()),
+          new TransactionType("Luz", Color.Salmon.ToArgb()),
+          new TransactionType("Agua", Color.Orange.ToArgb()));
 
         dbContext.SaveChanges();
 
