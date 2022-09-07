@@ -5,6 +5,7 @@ import TransactionLista from './TransactionLista';
 import CustomLabelPieChart from '../../components/CustomLabelPieChart'
 import api from '../../api/transaction';
 import TitlePage from '../../components/TitlePage';
+import DatePicker from "react-datepicker";
 
 export default function Transaction() {
     const [showTransactionModal, setShowTransactionModal] = useState(false);
@@ -12,6 +13,9 @@ export default function Transaction() {
 
     const [transactions, setTransactions] = useState([]);
     const [transaction, setTransaction] = useState({ id: 0 });
+
+    const [startDate, setStartDate] = useState(new Date(2022, 0, 1));
+    const [endDate, setEndDate] = useState(new Date(2022, 1, 1));
 
     const handleAtiviadeModal = () =>
         setShowTransactionModal(!showTransactionModal);
@@ -30,7 +34,7 @@ export default function Transaction() {
 
     const pegaTodasTransactions = async () => {
         try {
-            const response = await api.get('transactions');
+            const response = await api.get('transactions', { params: { start: startDate.toLocaleDateString('en-CA'), end: endDate.toLocaleDateString('en-CA') } });
             return response.data;
         } catch (err) {
             if (err.response) {
@@ -54,7 +58,7 @@ export default function Transaction() {
             if (todasTransactions) setTransactions(todasTransactions);
         };
         getTransactions();
-    }, []);
+    }, endDate);
 
     const addTransaction = async (ativ) => {
         handleAtiviadeModal();
@@ -119,10 +123,17 @@ export default function Transaction() {
         return  pieChartData ;
     }
 
+
+    const onDatePickerChange = (dates) => {
+        const [start, end] = dates;
+        setStartDate(start);
+        setEndDate(end);
+    };
+
     return (
         <>
             <TitlePage
-                title={'Transaction ' + (transaction.id !== 0 ? transaction.id : '')}
+                title={'Transactions '}
             >
                 <Button id="newTransactionButton" variant='outline-secondary' onClick={novaTransaction}>
                     <i className='fas fa-plus'></i>
@@ -133,16 +144,33 @@ export default function Transaction() {
                 fillPieData={fillPieData}
             />
 
+            <div className='col-sm-12'>
+                <label className='form-label'>Pick a data range:</label>
+            </div>
+            <div className='col-sm-12'>
+                <DatePicker
+                    onChange={onDatePickerChange}
+                    startDate={startDate}
+                    endDate={endDate}
+                    dateFormat="dd/MM/yyyy"
+                    wrapperClassName="date-picker"
+                    className='form-control col-sm-6'
+                    id='datePicker'
+                    selectsRange
+                />
+            </div>
+
             <TransactionLista
                 transactions={transactions}
                 pegarTransaction={pegarTransaction}
                 handleConfirmModal={handleConfirmModal}
+                setTransactions={setTransactions}
             />
 
             <Modal show={showTransactionModal} onHide={handleAtiviadeModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        Transaction {transaction.id !== 0 ? transaction.id : ''}
+                        {transaction.shortDescription}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>

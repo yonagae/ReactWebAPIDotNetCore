@@ -36,22 +36,7 @@ export default function TransactionItem(props) {
                     </h5>
                 }
             </td>
-            <td>{props.transaction.user.name}</td>
-            <td>
-                {
-                    String.fromCharCode(props.transaction.flow) == 'c' ?
-                        (
-                            <Button className='btn btn-sm btn-primary me-2' disabled>
-                                <i className='fa-sharp fa-solid fa-arrow-down'></i>
-                            </Button>
-                        ) :
-                        (
-                            <Button className='btn btn-sm btn-success me-2' disabled>
-                                <i className='fa-sharp fa-solid fa-arrow-up'></i>
-                            </Button>
-                        )
-                }
-            </td>
+            <td>{props.transaction.user.name}</td>           
             <td>
                 <div text-align='right'>
                     <i className={getAmountIcon()} style={getAmountColor()}></i>

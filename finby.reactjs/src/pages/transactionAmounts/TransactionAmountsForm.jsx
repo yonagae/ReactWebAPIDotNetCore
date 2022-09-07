@@ -11,7 +11,7 @@ export default function TransactionAmountsForm(props) {
         if (props.transaction.id <= 0) setFormFields([{ id: '0', userId: '0', positiveamount: '' }]);
 
         try {
-            const response = await api.get(`transactions/${props.transaction.id}/TransactionAmounts`);
+            const response = await api.get(`transactions/${props.transaction.id}/transactionAmounts`);
             props.transaction.transactionAmounts = response.data;
             setFormFields(response.data);
         } catch (err) {

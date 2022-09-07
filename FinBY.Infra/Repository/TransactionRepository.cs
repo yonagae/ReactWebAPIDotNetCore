@@ -25,9 +25,10 @@ namespace FinBY.Infra.Repository
             _dataset.AddRange(transactions);
         }
 
-        public async Task<List<Transaction>> GetAllDetailedWithouAmountsAsync()
+        public async Task<List<Transaction>> GetAllDetailedWithouAmountsAsync(DateTime start, DateTime end)
         {
              return await _dataset.AsNoTracking()
+                .Where(x => x.Date >= start && x.Date <= end )
                 .Include(x => x.TransactionType)
                 .Include(x => x.User)
                 .ToListAsync(); ;

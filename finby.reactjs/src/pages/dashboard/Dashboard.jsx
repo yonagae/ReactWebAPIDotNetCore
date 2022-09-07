@@ -14,7 +14,7 @@ export default function Dashboard() {
 
     const getGetSumOfTransactionsByTypeByPeriod = async () => {
         try {
-            const response = await api.get('transactions/dashboard', { params: { start: startDate.toLocaleDateString('en-CA'), end: endDate.toLocaleDateString('en-CA') } });
+            const response = await api.get('transactions/sumExpenseByType', { params: { start: startDate.toLocaleDateString('en-CA'), end: endDate.toLocaleDateString('en-CA') } });
             return response.data;
         } catch (err) {
             if (err.response) {
@@ -73,7 +73,7 @@ export default function Dashboard() {
         let pieChartData = [];
 
         sumByTransactionType.forEach(element => {
-            pieChartData.push({ name: element.item1.name, value: element.item2 });
+            pieChartData.push({ name: element.transactionType.name, value: element.sum, argbColor: element.transactionType.argbColor});
         });
 
         return pieChartData;
@@ -134,10 +134,10 @@ export default function Dashboard() {
                     {sumByTransactionType.map((st, index) => (
                         <Col key={index}>
                             <Card border='success'>
-                                <Card.Header>{st.item1.name}</Card.Header>
+                                <Card.Header>{st.transactionType.name}</Card.Header>
                                 <Card.Body>
                                     <Card.Title>
-                                        <h1 className='text-center'>${st.item2.toFixed(2)}</h1>
+                                        <h1 className='text-center'>${st.sum.toFixed(2)}</h1>
                                     </Card.Title>
                                 </Card.Body>
                             </Card>

@@ -36,11 +36,11 @@ namespace FinBY.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(List<TransactionDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllTransactions()
+        public async Task<IActionResult> GetAllTransactions(DateTime start, DateTime end)
         {
             try
             { 
-                var transactions = await _unitOfWork.TransactionRepository.GetAllDetailedWithouAmountsAsync();
+                var transactions = await _unitOfWork.TransactionRepository.GetAllDetailedWithouAmountsAsync(start, end);
                 var tsDTOs = _mapper.Map<List<TransactionDTO>>(transactions);
                 return Ok(tsDTOs);
             }
@@ -168,7 +168,7 @@ namespace FinBY.API.Controllers
         }
 
 
-        [HttpGet("{id}/TransactionAmounts")]
+        [HttpGet("{id}/transactionAmounts")]
         [ProducesResponseType(typeof(List<TransactionAmountDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -193,7 +193,7 @@ namespace FinBY.API.Controllers
             }
         }
 
-        [HttpGet("dashboard")]
+        [HttpGet("sumExpenseByType")]
         [ProducesResponseType(typeof(List<TransactionDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetDashboardInfo(DateTime start, DateTime end)
@@ -201,7 +201,18 @@ namespace FinBY.API.Controllers
             try
             {
                 var transactions = await _unitOfWork.TransactionRepository.GetSumOfTransactionsByTypeByPeriod(start, end);
-                return Ok(transactions);
+
+                var expenseSums = new List<ExpenseSumByTransactionTypeDTO>();
+                foreach (var transaction in transactions)
+                {
+                    expenseSums.Add(new ExpenseSumByTransactionTypeDTO()
+                    {
+                        Sum = transaction.Item2,
+                        TransactionType = _mapper.Map<TransactionTypeDTO>(transaction.Item1)
+                    });
+                }                
+
+                return Ok(expenseSums);
             }
             catch (Exception ex)
             {

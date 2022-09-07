@@ -20,25 +20,37 @@ public static class DBStartUp
          );
 
         dbContext.AddRange(
-          new TransactionType("Casa", Color.Aqua.ToArgb()),
-          new TransactionType("Mercado", Color.Aquamarine.ToArgb()),
-          new TransactionType("Pessoal", Color.LightGreen.ToArgb()),
-          new TransactionType("Luz", Color.Salmon.ToArgb()),
-          new TransactionType("Agua", Color.Orange.ToArgb()));
+        new TransactionType("Supermercado", Color.Aqua.ToArgb()),
+        new TransactionType("Bebida", Color.Aquamarine.ToArgb()),
+        new TransactionType("Casa", Color.LightGreen.ToArgb()),
+        new TransactionType("Pessoal", Color.Salmon.ToArgb()),
+        new TransactionType("Agua", Color.Orange.ToArgb()),
+        new TransactionType("Luz", Color.LightBlue.ToArgb()),
+        new TransactionType("Internet", Color.DarkBlue.ToArgb()),
+        new TransactionType("Aluguel", Color.DarkGreen.ToArgb()),
+        new TransactionType("Farmácia", Color.Goldenrod.ToArgb()),
+        new TransactionType("Medico", Color.LightGray.ToArgb()),
+        new TransactionType("Restaurante", Color.LightPink.ToArgb()),
+        new TransactionType("Transporte", Color.LimeGreen.ToArgb()),
+        new TransactionType("Novo AP", Color.MediumPurple.ToArgb()),
+        new TransactionType("Outro", Color.MediumVioletRed.ToArgb()),
+        new TransactionType("Férias", Color.Orange.ToArgb()),
+        new TransactionType("Lazer", Color.OrangeRed.ToArgb()));
 
         dbContext.SaveChanges();
 
         List<Transaction> transactions = new List<Transaction>();
-        for (int i = 1; i <= 10; i++)
+        for (int i = 1; i <= 100; i++)
         {
-            List<TransactionAmount> transactionAmounts = new List<TransactionAmount>()
-                    {
-                        new TransactionAmount(0, 1, 1.0m),
-                        new TransactionAmount(0, 2, 2.0m)
+            Random random = new Random();   
+            List<TransactionAmount> transactionAmounts = new List<TransactionAmount>() {
+                        new TransactionAmount(0, 1, Convert.ToDecimal(random.Next(9) + 1) + Convert.ToDecimal(random.Next(99))/100),
+                        new TransactionAmount(0, 2, Convert.ToDecimal(random.Next(9) + 1) + Convert.ToDecimal(random.Next(99))/100)
                     };
+
             var transaction = new Transaction(
                 eTransactionFlow.Credit,
-                (i % 3) + 1
+                random.Next(14) + 1
                 , (i % 2) + 1
                 , new DateTime(2022, 01, 01).AddDays(i)
                 , $"Gasto número {i}"

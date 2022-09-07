@@ -13,7 +13,7 @@ namespace FinBY.Domain.Repositories
         public void Add(IList<Transaction> transactions);
         public Task<Transaction> GetDetailedByIdAsync(int id);
 
-        public Task<List<Transaction>> GetAllDetailedWithouAmountsAsync();
+        public Task<List<Transaction>> GetAllDetailedWithouAmountsAsync(DateTime start, DateTime end);
 
         public Task<PagedResult<Transaction>> GetAllWithDetailsAsPagedResultAsync(PagedTransactionParams transsactionParams);
 
