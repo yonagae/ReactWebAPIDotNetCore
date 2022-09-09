@@ -23,5 +23,7 @@ namespace FinBY.Domain.Entities
 
         public void SetArgbColorFromColor(Color color) => ArgbColor = color.ToArgb();
         public Color GetArgbColor() => Color.FromArgb(ArgbColor);
+
+        public string GetArgbColorAsHexString() => $"#{this.GetArgbColor().R:X2}{this.GetArgbColor().G:X2}{this.GetArgbColor().B:X2}";
     }
 }

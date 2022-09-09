@@ -12,6 +12,7 @@ namespace FinBY.Domain.Entities
 
         [Required(ErrorMessage = "TransactionId must be specified")]
         public int TransactionId { get; private set; }
+        public Transaction Transaction { get; private set; }
 
         [Required(ErrorMessage = "User must be specified")]
         public int UserId { get; private set; }

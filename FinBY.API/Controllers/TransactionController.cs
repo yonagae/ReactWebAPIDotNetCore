@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using FinBY.Domain.Data.PagedResult;
 using FinBY.API.Helper;
+using FinBY.Domain.Enum;
 
 namespace FinBY.API.Controllers
 {
@@ -40,7 +41,7 @@ namespace FinBY.API.Controllers
         {
             try
             { 
-                var transactions = await _unitOfWork.TransactionRepository.GetAllDetailedWithouAmountsAsync(start, end);
+                var transactions = await _unitOfWork.TransactionRepository.GetAllDetailedWithoutAmountsAsync(start, end);
                 var tsDTOs = _mapper.Map<List<TransactionDTO>>(transactions);
                 return Ok(tsDTOs);
             }
@@ -228,8 +229,98 @@ namespace FinBY.API.Controllers
         {
             try
             {
-                var transactions = await _unitOfWork.TransactionRepository.GetSumOfTransactionsByUserByPeriod(start, end);
-                return Ok(transactions);
+                var userSumTransactionDictionary = new Dictionary<string, UserSumTransactionDTO>();
+                var userSum = await _unitOfWork.TransactionRepository.GetSumOfTransactionsByUserByPeriod(start, end);
+
+                if (userSum.Count != 0)
+                {
+                    foreach(var t in userSum)
+                    {
+                        (User user, eTransactionFlow eFlow, decimal sum) = t;
+                        if (!userSumTransactionDictionary.ContainsKey(user.Name))
+                            userSumTransactionDictionary.Add(user.Name, new UserSumTransactionDTO() { UserName = user.Name });
+
+                        userSumTransactionDictionary[user.Name].SumByFlowType.Add(eFlow, sum);
+                    }
+                }
+
+                return Ok(userSumTransactionDictionary.Values.ToList());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside the Transaction get action: {ex}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("yearlyExpense")]
+        [ProducesResponseType(typeof(List<TransactionDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetMonthlyExpenseByPeriod(DateTime start, DateTime end, [FromQuery(Name = "listOfTransactionsTypeIds[]")] List<int> listOfTransactionsTypeIds)
+        {
+            try
+            {
+                var result = new List<Dictionary<string, object>>();
+                var monthlyExpense = await _unitOfWork.TransactionRepository.GetMonthlyExpenseByPeriod(start, end, listOfTransactionsTypeIds);
+                if (monthlyExpense.Count != 0)
+                {
+                    var monthlyExpenseByMonthDic = monthlyExpense.GroupBy(x => new { x.Item1.Year, x.Item1.Month })
+                        .ToDictionary(
+                                     g => $"{g.Key.Month}/{g.Key.Year}", 
+                                     g => g.Select(x => new { x.Item2, x.Item3}).ToList() //create a list of just the name of type and sum value
+                                 );
+
+                    foreach (var t in monthlyExpenseByMonthDic)
+                    {
+                        var userSumTransactionDictionary = new Dictionary<string, object>();
+                        userSumTransactionDictionary.Add("name", t.Key);
+                        foreach(var typesAndSum in t.Value)
+                        {
+                            userSumTransactionDictionary.Add(typesAndSum.Item2.Name, typesAndSum.Item3);
+                        }
+                        result.Add(userSumTransactionDictionary);
+                    }
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside the Transaction get action: {ex}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("monthlyExpenseByPeriodAndUser")]
+        [ProducesResponseType(typeof(List<TransactionDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetMonthlyExpenseByPeriodAndUser(int userId, DateTime start, DateTime end, [FromQuery(Name = "listOfTransactionsTypeIds[]")] List<int> listOfTransactionsTypeIds)
+        {
+            try
+            {
+                var result = new List<Dictionary<string, object>>();
+                var monthlyExpense = await _unitOfWork.TransactionAmountRepository.GetMonthlyExpenseByPeriod(userId, start, end, listOfTransactionsTypeIds);
+                if (monthlyExpense.Count != 0)
+                {
+                    var monthlyExpenseByMonthDic = monthlyExpense.GroupBy(x => new { x.Item1.Year, x.Item1.Month })
+                        .ToDictionary(
+                                     g => $"{g.Key.Month}/{g.Key.Year}",
+                                     g => g.Select(x => new { x.Item2, x.Item3 }).ToList() //create a list of just the name of type and sum value
+                                 );
+
+                    foreach (var t in monthlyExpenseByMonthDic)
+                    {
+                        var userSumTransactionDictionary = new Dictionary<string, object>();
+                        userSumTransactionDictionary.Add("name", t.Key);
+                        foreach (var typesAndSum in t.Value)
+                        {
+                            userSumTransactionDictionary.Add(typesAndSum.Item2, typesAndSum.Item3);
+                        }
+                        result.Add(userSumTransactionDictionary);
+                    }
+                }
+
+                return Ok(result);
             }
             catch (Exception ex)
             {

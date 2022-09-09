@@ -57,7 +57,7 @@ namespace FinBY.Infra.Mappings
             .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(x => x.TransactionAmounts)
-            .WithOne()
+            .WithOne(x => x.Transaction)
             .HasForeignKey(p => p.TransactionId)
             .OnDelete(DeleteBehavior.Cascade);
 

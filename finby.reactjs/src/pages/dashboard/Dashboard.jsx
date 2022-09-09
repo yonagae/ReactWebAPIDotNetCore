@@ -18,9 +18,9 @@ export default function Dashboard() {
             return response.data;
         } catch (err) {
             if (err.response) {
-               console.log('APIError', err.message);
+                console.log('APIError', err.message);
             } else if (err.request) {
-               console.log('RequestError', err.message);
+                console.log('RequestError', err.message);
             } else {
                 console.log('Error', err.message);
             }
@@ -33,9 +33,9 @@ export default function Dashboard() {
             return response.data;
         } catch (err) {
             if (err.response) {
-               console.log('APIError', err.message);
+                console.log('APIError', err.message);
             } else if (err.request) {
-               console.log('RequestError', err.message);
+                console.log('RequestError', err.message);
             } else {
                 console.log('Error', err.message);
             }
@@ -73,7 +73,7 @@ export default function Dashboard() {
         let pieChartData = [];
 
         sumByTransactionType.forEach(element => {
-            pieChartData.push({ name: element.transactionType.name, value: element.sum, argbColor: element.transactionType.argbColor});
+            pieChartData.push({ name: element.transactionType.name, value: element.sum, argbColor: element.transactionType.argbColor });
         });
 
         return pieChartData;
@@ -114,10 +114,29 @@ export default function Dashboard() {
                             {sumByUser.map((st, index) => (
                                 <Col key={index}>
                                     <Card border='dark'>
-                                        <Card.Header>{st.item1.name}</Card.Header>
+                                        <Card.Header>{st.userName}</Card.Header>
                                         <Card.Body>
                                             <Card.Title>
-                                                <h1 className='text-center'>${st.item2.toFixed(2)}</h1>
+                                                <h1 className='text-center' style={{ color: "green" }}>
+                                                    <i className='fa-sharp fa-solid fa-caret-up' style={{ color: "green" }}></i>
+                                                    {
+                                                        st.sumByFlowType.Debit != null ? (
+                                                            '$' + st.sumByFlowType.Debit.toFixed(2)
+                                                        ) : (
+                                                            '$ 0.00'
+                                                        )
+                                                    }
+                                                </h1>
+                                                <h1 className='text-center' style={{ color: "red" }}>
+                                                    <i className='fa-sharp fa-solid fa-caret-down' style={{ color: "red" }}></i>
+                                                    {
+                                                        st.sumByFlowType.Credit != null ? (
+                                                            '$' + st.sumByFlowType.Credit.toFixed(2)
+                                                        ) : (
+                                                            '$ 0.00'
+                                                        )
+                                                    }
+                                                </h1>
                                             </Card.Title>
                                         </Card.Body>
                                     </Card>
@@ -130,11 +149,11 @@ export default function Dashboard() {
 
 
             <div className='mt-3'>
-                <Row>
+                <Row fluid='true'>
                     {sumByTransactionType.map((st, index) => (
                         <Col key={index}>
-                            <Card border='success'>
-                                <Card.Header>{st.transactionType.name}</Card.Header>
+                            <Card border='success' style={{ width: '12rem' }}>
+                                <Card.Header style={{ backgroundColor: st.transactionType.argbColor, color: 'white', fontSize : 'large'}}>{st.transactionType.name}</Card.Header>
                                 <Card.Body>
                                     <Card.Title>
                                         <h1 className='text-center'>${st.sum.toFixed(2)}</h1>
@@ -145,8 +164,6 @@ export default function Dashboard() {
                     ))}
                 </Row>
             </div>
-
-
         </>
     );
 }

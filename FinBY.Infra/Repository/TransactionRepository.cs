@@ -25,7 +25,7 @@ namespace FinBY.Infra.Repository
             _dataset.AddRange(transactions);
         }
 
-        public async Task<List<Transaction>> GetAllDetailedWithouAmountsAsync(DateTime start, DateTime end)
+        public async Task<List<Transaction>> GetAllDetailedWithoutAmountsAsync(DateTime start, DateTime end)
         {
              return await _dataset.AsNoTracking()
                 .Where(x => x.Date >= start && x.Date <= end )
@@ -124,18 +124,59 @@ namespace FinBY.Infra.Repository
             return sums;
         }
 
-        public async Task<List<Tuple<User, decimal>>> GetSumOfTransactionsByUserByPeriod(DateTime begin, DateTime end)
+        public async Task<List<Tuple<User, eTransactionFlow, decimal>>> GetSumOfTransactionsByUserByPeriod(DateTime begin, DateTime end)
         {
             var sums = await _dataset.AsNoTracking()
-                  .Where(x => x.Date >= begin && x.Date <= end && x.Flow == eTransactionFlow.Credit)
-                  .GroupBy(x => x.UserId)
-                  .Select(x => new Tuple<User, decimal>(
+                  .Where(x => x.Date >= begin && x.Date <= end)
+                  .GroupBy(x => new { x.UserId, x.Flow })
+                  .Select(x => new Tuple<User, eTransactionFlow, decimal>(
                        x.First().User,
+                       x.First().Flow,
                        x.Sum(y => y.TotalAmount)
                   )).
                   ToListAsync();
 
             return sums;
+        }
+
+        public async Task<List<Tuple<DateTime, TransactionType, decimal>>> GetMonthlyExpenseByPeriod(DateTime begin, DateTime end, IList<int> transactionTypeIds)
+        {
+            var sums = await _dataset.AsNoTracking()
+                  .Where(x => x.Date >= begin && x.Date <= end && transactionTypeIds.Contains(x.TransactionTypeId))
+                  .GroupBy(x => new { x.Date.Year, x.Date.Month , x.TransactionTypeId })
+                  .Select(x => new Tuple<DateTime, TransactionType, decimal>(
+                       x.First().Date,
+                       x.First().TransactionType,
+                       x.Sum(y => y.TotalAmount)
+                  ))
+                  .ToListAsync();
+
+            return sums.OrderBy(x => x.Item1).ToList();
+        }
+
+        public async Task<List<Tuple<DateTime, string, decimal>>> GetMonthlyExpenseByPeriod(int userId, DateTime begin, DateTime end, IList<int> transactionTypeIds)
+        {
+            var sums = await _dataset.AsNoTracking()
+                  .Where(x => x.Date >= begin && x.Date <= end
+                  && transactionTypeIds.Contains(x.TransactionTypeId)
+                  && x.TransactionAmounts.Where(t => t.UserId == userId).Count() > 0
+                  )
+                  .Select(x => new Tuple<DateTime, string, IReadOnlyCollection<TransactionAmount>>(
+                       x.Date,
+                       x.TransactionType.Name,
+                       x.TransactionAmounts
+                      )).ToListAsync();
+
+
+             var result = sums.GroupBy(x => new { x.Item1.Year, x.Item1.Month, x.Item3 })
+                  .Select(y => new Tuple<DateTime, string, decimal>(
+                       y.First().Item1,
+                       y.First().Item2,
+                       y.Sum(y => y.Item3.Where(t => t.UserId == userId).Select(p => p.PositiveAmount).First())
+                  ))
+                  .ToList();
+
+            return result.OrderBy(x => x.Item1).ToList();
         }
     }
 }

@@ -29,9 +29,7 @@ namespace FinBY.Infra.Mappings
               .HasForeignKey(p => p.UserId)
               .IsRequired();
 
-            //builder.HasOne(x => x.Transaction)
-            //    .WithMany(c => c.TransactionAmounts)
-            //    .IsRequired();
+            //builder.HasOne(x => x.Transaction).WithMany().OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

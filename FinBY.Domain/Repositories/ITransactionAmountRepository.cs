@@ -9,5 +9,7 @@ namespace FinBY.Domain.Repositories
     public interface ITransactionAmountRepository : IRepository<TransactionAmount, int>
     {
         public Task<List<TransactionAmount>> GetTransactionAmountsByTransactionIdAsync(int transactionID);
+
+        public Task<List<Tuple<DateTime, string, decimal>>> GetMonthlyExpenseByPeriod(int userId, DateTime begin, DateTime end, IList<int> transactionTypeIds);
     }
 }

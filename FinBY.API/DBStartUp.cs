@@ -9,7 +9,7 @@ public static class DBStartUp
 {
     public static void StartupBase(ApplicationDbContext dbContext)
     {
-        //return;
+        return;
 
         dbContext.Database.EnsureDeleted();
         dbContext.Database.EnsureCreated();
@@ -40,7 +40,7 @@ public static class DBStartUp
         dbContext.SaveChanges();
 
         List<Transaction> transactions = new List<Transaction>();
-        for (int i = 1; i <= 100; i++)
+        for (int i = 1; i <= 1000; i++)
         {
             Random random = new Random();   
             List<TransactionAmount> transactionAmounts = new List<TransactionAmount>() {
@@ -49,7 +49,7 @@ public static class DBStartUp
                     };
 
             var transaction = new Transaction(
-                eTransactionFlow.Credit,
+                random.Next(10) == 1 ? eTransactionFlow.Debit : eTransactionFlow.Credit,
                 random.Next(14) + 1
                 , (i % 2) + 1
                 , new DateTime(2022, 01, 01).AddDays(i)

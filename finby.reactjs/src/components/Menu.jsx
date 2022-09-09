@@ -14,7 +14,7 @@ export default function Menu() {
                         <Nav.Link
                             className={(navData) => navData.isActive ? 'Active' : ''}
                             as={NavLink}
-                            to='/cliente/lista'
+                            to='/cliente'
                         >
                             Clientes
                         </Nav.Link>
@@ -22,7 +22,7 @@ export default function Menu() {
                             id="menuTransaction"
                             className={(navData) => navData.isActive ? 'Active' : ''}
                             as={NavLink}
-                            to='/transaction/lista'
+                            to='/transaction'
                         >
                             Transactions
                         </Nav.Link>
@@ -30,9 +30,23 @@ export default function Menu() {
                         <Nav.Link
                             className={(navData) => navData.isActive ? 'Active' : ''}
                             as={NavLink}
-                            to='/transactionType/lista'
+                            to='/transactionType'
                         >
                             Transaction Types
+                        </Nav.Link>
+                        <Nav.Link
+                            className={(navData) => navData.isActive ? 'Active' : ''}
+                            as={NavLink}
+                            to='/monthlyExpense'
+                        >
+                            Monthly Expense
+                        </Nav.Link>
+                        <Nav.Link
+                            className={(navData) => navData.isActive ? 'Active' : ''}
+                            as={NavLink}
+                            to='/userExpense'
+                        >
+                            User Expense
                         </Nav.Link>
 
                     </Nav>
